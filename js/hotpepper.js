@@ -7,6 +7,7 @@ let shops = [];
 function getResult() {
   const urlParams = new URLSearchParams(window.location.search);
   let url = new URL(apiUrl);
+  url.searchParams.append("count", "100");
   if (urlParams.has("range")) {
     url.searchParams.append("range", urlParams.get("range"));
   }
@@ -28,7 +29,6 @@ function getResult() {
   if (urlParams.has("small_area")) {
     url.searchParams.append("small_area", urlParams.get("small_area"));
   }
-  url.searchParams.append("count", "100");
 
   fetch(proxyUrl + encodeURIComponent(url))
     .then((response) => response.text())
