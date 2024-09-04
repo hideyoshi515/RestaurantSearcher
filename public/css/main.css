@@ -1,3 +1,15 @@
+:root {
+	font-size: calc(10px + 1vmin);
+	--primary: hsl(45, 80%, 60%);
+	--darkGrey: #333344;
+	--mediumGrey: #557777;
+	--softGrey: #9a97a8;
+	--softTint: rgba(0, 0, 0, 0.2);
+	--bounce: 0.3s cubic-bezier(0.3, -0.3, 0.1, 1.4);
+	--ease: 0.5s cubic-bezier(0.3, 0.1, 0.3, 1);
+	--length: 2;
+}
+
 *,
 *::before,
 *::after {
