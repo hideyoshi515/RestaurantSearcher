@@ -12,7 +12,6 @@
   <link rel="stylesheet" href="css/map_of_japan.css" />
   <title>Index</title>
 </head>
-
 <body>
   <div class="container">
     <div style="margin-top: 10px;">
@@ -48,73 +47,75 @@
           <button type="button" onclick="searchAreaCode()">エリア検索</button>
           <div id="jp_map">
             <ul class="hokkaido" aria-label="北海道">
-              <li class="hokkaido"><a href="#Z041"><span class="pref_name">北海道</span></a></li>
+              <li class="hokkaido"><a href="#" onclick="selectMap('Z041')"><span class="pref_name">北海道</span></a></li>
             </ul>
             <ul class="tohoku" aria-label="東北">
-              <li class="aomori"><a href="#Z051"><span class="pref_name">青森</span></a></li>
-              <li class="akita"><a href="#Z054"><span class="pref_name">秋田</span></a></li>
-              <li class="iwate"><a href="#Z052"><span class="pref_name">岩手</span></a></li>
-              <li class="yamagata"><a href="#Z055"><span class="pref_name">山形</span></a></li>
-              <li class="miyagi"><a href="#Z053"><span class="pref_name">宮城</span></a></li>
-              <li class="fukushima"><a href="#Z056"><span class="pref_name">福島</span></a></li>
+              <li class="aomori"><a href="#" onclick="selectMap('Z051')"><span class="pref_name">青森</span></a></li>
+              <li class="akita"><a href="#" onclick="selectMap('Z054')"><span class="pref_name">秋田</span></a></li>
+              <li class="iwate"><a href="#" onclick="selectMap('Z052')"><span class="pref_name">岩手</span></a></li>
+              <li class="yamagata"><a href="#" onclick="selectMap('Z055')"><span class="pref_name">山形</span></a></li>
+              <li class="miyagi"><a href="#" onclick="selectMap('Z053')"><span class="pref_name">宮城</span></a></li>
+              <li class="fukushima"><a href="#" onclick="selectMap('Z056')"><span class="pref_name">福島</span></a></li>
             </ul>
             <ul class="kanto" aria-label="関東">
-              <li class="gunma"><a href="#Z017"><span class="pref_name">群馬</span></a></li>
-              <li class="tochigi"><a href="#Z016"><span class="pref_name">栃木</span></a></li>
-              <li class="ibaraki"><a href="#Z015"><span class="pref_name">茨城</span></a></li>
-              <li class="saitama"><a href="#Z013"><span class="pref_name">埼玉</span></a></li>
-              <li class="chiba"><a href="#Z014"><span class="pref_name">千葉</span></a></li>
-              <li class="tokyo"><a href="#Z011"><span class="pref_name">東京</span></a></li>
-              <li class="kanagawa"><a href="#Z012"><span class="pref_name">神奈川</span></a></li>
+              <li class="gunma"><a href="#" onclick="selectMap('Z017')"><span class="pref_name">群馬</span></a></li>
+              <li class="tochigi"><a href="#" onclick="selectMap('Z016')"><span class="pref_name">栃木</span></a></li>
+              <li class="ibaraki"><a href="#" onclick="selectMap('Z015')"><span class="pref_name">茨城</span></a></li>
+              <li class="saitama"><a href="#" onclick="selectMap('Z013')"><span class="pref_name">埼玉</span></a></li>
+              <li class="chiba"><a href="#" onclick="selectMap('Z014')"><span class="pref_name">千葉</span></a></li>
+              <li class="tokyo"><a href="#" onclick="selectMap('Z011')"><span class="pref_name">東京</span></a></li>
+              <li class="kanagawa"><a href="#" onclick="selectMap('Z012')"><span class="pref_name">神奈川</span></a></li>
             </ul>
             <ul class="chubu" aria-label="中部">
-              <li class="nigata"><a href="#Z061"><span class="pref_name">新潟</span></a></li>
-              <li class="toyama"><a href="#Z062"><span class="pref_name">富山</span></a></li>
-              <li class="ishikawa"><a href="#Z063"><span class="pref_name">石川</span></a></li>
-              <li class="fukui"><a href="#Z064"><span class="pref_name">福井</span></a></li>
-              <li class="nagano"><a href="#Z066"><span class="pref_name">長野</span></a></li>
-              <li class="gifu"><a href="#Z031"><span class="pref_name">岐阜</span></a></li>
-              <li class="yamanashi"><a href="#Z065"><span class="pref_name">山梨</span></a></li>
-              <li class="aichi"><a href="#Z033"><span class="pref_name">愛知</span></a></li>
-              <li class="shizuoka"><a href="#Z032"><span class="pref_name">静岡</span></a></li>
+              <li class="nigata"><a href="#" onclick="selectMap('Z061')"><span class="pref_name">新潟</span></a></li>
+              <li class="toyama"><a href="#" onclick="selectMap('Z062')"><span class="pref_name">富山</span></a></li>
+              <li class="ishikawa"><a href="#" onclick="selectMap('Z063')"><span class="pref_name">石川</span></a></li>
+              <li class="fukui"><a href="#" onclick="selectMap('Z064')"><span class="pref_name">福井</span></a></li>
+              <li class="nagano"><a href="#" onclick="selectMap('Z066')"><span class="pref_name">長野</span></a></li>
+              <li class="gifu"><a href="#" onclick="selectMap('Z031')"><span class="pref_name">岐阜</span></a></li>
+              <li class="yamanashi"><a href="#" onclick="selectMap('Z065')"><span class="pref_name">山梨</span></a></li>
+              <li class="aichi"><a href="#" onclick="selectMap('Z033')"><span class="pref_name">愛知</span></a></li>
+              <li class="shizuoka"><a href="#" onclick="selectMap('Z032')"><span class="pref_name">静岡</span></a></li>
             </ul>
             <ul class="kansai" aria-label="近畿">
-              <li class="kyoto"><a href="#Z022"><span class="pref_name">京都</span></a></li>
-              <li class="shiga"><a href="#Z021"><span class="pref_name">滋賀</span></a></li>
-              <li class="osaka"><a href="#Z023"><span class="pref_name">大阪</span></a></li>
-              <li class="nara"><a href="#Z025"><span class="pref_name">奈良</span></a></li>
-              <li class="mie"><a href="#Z034"><span class="pref_name">三重</span></a></li>
-              <li class="wakayama"><a href="#Z026"><span class="pref_name">和歌山</span></a></li>
-              <li class="hyogo"><a href="#Z024"><span class="pref_name">兵庫</span></a></li>
+              <li class="kyoto"><a href="#" onclick="selectMap('Z022')"><span class="pref_name">京都</span></a></li>
+              <li class="shiga"><a href="#" onclick="selectMap('Z021')"><span class="pref_name">滋賀</span></a></li>
+              <li class="osaka"><a href="#" onclick="selectMap('Z023')"><span class="pref_name">大阪</span></a></li>
+              <li class="nara"><a href="#" onclick="selectMap('Z025')"><span class="pref_name">奈良</span></a></li>
+              <li class="mie"><a href="#" onclick="selectMap('Z034')"><span class="pref_name">三重</span></a></li>
+              <li class="wakayama"><a href="#" onclick="selectMap('Z026')"><span class="pref_name">和歌山</span></a></li>
+              <li class="hyogo"><a href="#" onclick="selectMap('Z024')"><span class="pref_name">兵庫</span></a></li>
             </ul>
             <ul class="chugoku" aria-label="中国">
-              <li class="tottori"><a href="#Z071"><span class="pref_name">鳥取</span></a></li>
-              <li class="okayama"><a href="#Z073"><span class="pref_name">岡山</span></a></li>
-              <li class="shimane"><a href="#Z072"><span class="pref_name">島根</span></a></li>
-              <li class="hiroshima"><a href="#Z074"><span class="pref_name">広島</span></a></li>
-              <li class="yamaguchi"><a href="#Z075"><span class="pref_name">山口</span></a></li>
+              <li class="tottori"><a href="#" onclick="selectMap('Z071')"><span class="pref_name">鳥取</span></a></li>
+              <li class="okayama"><a href="#" onclick="selectMap('Z073')"><span class="pref_name">岡山</span></a></li>
+              <li class="shimane"><a href="#" onclick="selectMap('Z072')"><span class="pref_name">島根</span></a></li>
+              <li class="hiroshima"><a href="#" onclick="selectMap('Z074')"><span class="pref_name">広島</span></a></li>
+              <li class="yamaguchi"><a href="#" onclick="selectMap('Z075')"><span class="pref_name">山口</span></a></li>
             </ul>
             <ul class="shikoku" aria-label="四国">
-              <li class="kagawa"><a href="#Z082"><span class="pref_name">香川</span></a></li>
-              <li class="ehime"><a href="#Z083"><span class="pref_name">愛媛</span></a></li>
-              <li class="tokushima"><a href="#Z081"><span class="pref_name">徳島</span></a></li>
-              <li class="kochi"><a href="#Z084"><span class="pref_name">高知</span></a></li>
+              <li class="kagawa"><a href="#" onclick="selectMap('Z082')"><span class="pref_name">香川</span></a></li>
+              <li class="ehime"><a href="#" onclick="selectMap('Z083')"><span class="pref_name">愛媛</span></a></li>
+              <li class="tokushima"><a href="#" onclick="selectMap('Z081')"><span class="pref_name">徳島</span></a></li>
+              <li class="kochi"><a href="#" onclick="selectMap('Z084')"><span class="pref_name">高知</span></a></li>
             </ul>
             <ul class="kyushu" aria-label="九州">
-              <li class="fukuoka"><a href="#Z091"><span class="pref_name">福岡</span></a></li>
-              <li class="saga"><a href="#Z092"><span class="pref_name">佐賀</span></a></li>
-              <li class="nagasaki"><a href="#Z093"><span class="pref_name">長崎</span></a></li>
-              <li class="oita"><a href="#Z095"><span class="pref_name">大分</span></a></li>
-              <li class="kumamoto"><a href="#Z094"><span class="pref_name">熊本</span></a></li>
-              <li class="miyazaki"><a href="#Z096"><span class="pref_name">宮崎</span></a></li>
-              <li class="kagoshima"><a href="#Z097"><span class="pref_name">鹿児島</span></a></li>
+              <li class="fukuoka"><a href="#" onclick="selectMap('Z091')"><span class="pref_name">福岡</span></a></li>
+              <li class="saga"><a href="#" onclick="selectMap('Z092')"><span class="pref_name">佐賀</span></a></li>
+              <li class="nagasaki"><a href="#" onclick="selectMap('Z093')"><span class="pref_name">長崎</span></a></li>
+              <li class="oita"><a href="#" onclick="selectMap('Z095')"><span class="pref_name">大分</span></a></li>
+              <li class="kumamoto"><a href="#" onclick="selectMap('Z094')"><span class="pref_name">熊本</span></a></li>
+              <li class="miyazaki"><a href="#" onclick="selectMap('Z096')"><span class="pref_name">宮崎</span></a></li>
+              <li class="kagoshima"><a href="#" onclick="selectMap('Z097')"><span class="pref_name">鹿児島</span></a></li>
             </ul>
             <ul class="okinawa" aria-label="沖縄">
-              <li class="okinawa"><a href="#Z098"><span class="pref_name">沖縄</span></a></li>
+              <li class="okinawa"><a href="#" onclick="selectMap('Z098')"><span class="pref_name">沖縄</span></a></li>
             </ul>
           </div>
         </div>
       </form>
+    </div>
+    <div class="middleArea" id="middleArea" style="display: none;">
     </div>
     <div>
       <button onclick="testTokyo()">東京都庁</button>
