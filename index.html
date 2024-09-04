@@ -1,24 +1,54 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="js/api.js"></script>
+    <script src="js/area.js"></script>
     <script src="js/geo.js"></script>
     <script src="js/hotpepper.js"></script>
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/main.css" />
     <title>Index</title>
-</head>
-<body>
-    <form name="searchForm" action="result.html" method="GET">
-        <div class="select">
-            <input type="radio" name="range" value="1">300m
-            <input type="radio" name="range" value="2">500m
-            <input type="radio" name="range" value="3" checked>1,000m
-            <input type="radio" name="range" value="4">2,000m
-            <input type="radio" name="range" value="5">3,000m
-        </div>
-        <button type="button" onclick="getLocation()">位置情報</button>
-    </form>
-    <button onclick="testTokyo()">東京都庁</button>
-</body>
+  </head>
+  <body>
+    <div class="container">
+      <div>
+        <button onclick="testTokyo()">東京都庁</button>
+      </div>
+      <div style="margin-top: 10px;">
+        <form name="searchForm" action="result.html" method="GET">
+          現在位置から
+          <div class="select">
+            <input type="radio" name="range" value="1" />300m
+            <input type="radio" name="range" value="2" />500m
+            <input type="radio" name="range" value="3" checked />1,000m
+            <input type="radio" name="range" value="4" />2,000m
+            <input type="radio" name="range" value="5" />3,000m
+          </div>
+          <button type="button" onclick="getLocation()">検索</button>
+        </form>
+      </div>
+      <div style="margin-top: 10px;">
+        <form name="searchLocate" action="result.html" method="GET">
+          <div>
+            <label for="largeSelect">大サービスエリア:</label>
+            <select id="largeSelect">
+              <option value="">選択してください</option>
+            </select>
+
+            <label for="middleSelect">中エリア:</label>
+            <select id="middleSelect" disabled>
+              <option value="">選択してください</option>
+            </select>
+
+            <label for="smallSelect">小エリア:</label>
+            <select id="smallSelect" disabled>
+              <option value="">選択してください</option>
+            </select>
+          </div>
+          <button type="button" onclick="searchAreaCode()">エリア検索</button>
+        </form>
+      </div>
+    </div>
+  </body>
 </html>

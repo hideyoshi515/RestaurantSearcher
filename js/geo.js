@@ -1,4 +1,4 @@
-
+//現在の位置情報を取得し、指定されたパラメータを含むURLにリダイレクト
 function showPosition(position) {
   const latitude = position.coords.latitude;
   const longitude = position.coords.longitude;
@@ -14,21 +14,20 @@ function showPosition(position) {
   window.location.href = `${baseUrl}?${params.toString()}`;
 }
 
+//ユーザーの位置情報を取得するために Geolocation API を呼び出し
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
     }
 }
 
+//位置情報の取得に失敗した場合にエラーメッセージを表示
 function showError(error) {
   alert(`Error occurred: ${error.code}`);
 }
 
+//東京都庁の固定位置情報でリダイレクト
 function testTokyo() {
   const locationElement = document.getElementById("location");
-  let url = `${apiUrl}&lat=35.689501375244&lng=139.69173371705`;
-  fetch(proxyUrl + encodeURIComponent(url))
-    .then((response) => response.text())
-    .then((data) => parseXML(data))
-    .catch((error) => console.error("Error:", error));
+  window.location.href = `result.html?lat=35.689501375244&lng=139.69173371705&count=100`;
 }
