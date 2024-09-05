@@ -77,6 +77,8 @@ function getResult() {
         document.getElementById(
           "areaName"
         ).innerHTML = `〒${postcode} ${neighbourhood}から${range}以内`;
+        addItemToList(neighbourhood + ":"+ `lat=${urlParams.get("lat")}&lon=${urlParams.get("lng")}` + ":" + urlParams.get("range"));
+        saveListToLocalStorage("shopHistory");
       }
     };
     xhr.send();
@@ -88,9 +90,11 @@ function parseXMLName(xmlString) {
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(xmlString, "application/xml");
   const areas = xmlDoc.getElementsByTagName("small_area");
-  document.getElementById("areaName").innerHTML = areas[0].getElementsByTagName(
-    "name"
-  )[0].textContent;
+  const name = areas[0].getElementsByTagName("name")[0].textContent;
+  const areaCode = areas[0].getElementsByTagName("code")[0].textContent;
+  document.getElementById("areaName").innerHTML = name;
+  addItemToList(name + ":" + areaCode + ":6");
+  saveListToLocalStorage("shopHistory");
 }
 
 // XMLデータを解析する関数
@@ -277,9 +281,8 @@ function updatePagination() {
 
   // 前のボタンを生成
   if (currentPage > 1) {
-    paginationHTML += `<button class="pageBtn" onclick="changePage(${
-      currentPage - 1
-    })"><</button>`;
+    paginationHTML += `<button class="pageBtn" onclick="changePage(${currentPage - 1
+      })"><</button>`;
   } else {
     paginationHTML += `<button class="pageBtn" disabled><</button>`;
   }
@@ -295,9 +298,8 @@ function updatePagination() {
 
   // 次のボタンを生成
   if (currentPage < totalPages) {
-    paginationHTML += `<button class="pageBtn" onclick="changePage(${
-      currentPage + 1
-    })">></button>`;
+    paginationHTML += `<button class="pageBtn" onclick="changePage(${currentPage + 1
+      })">></button>`;
   } else {
     paginationHTML += `<button class="pageBtn" disabled>></button>`;
   }

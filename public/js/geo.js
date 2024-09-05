@@ -42,6 +42,7 @@ function showPosition(position) {
 
 // ユーザーの位置情報を取得するために Geolocation API を呼び出し
 function getLocation() {
+  loadListFromLocalStorage("shopHistory");
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(showPosition, showError);
   }

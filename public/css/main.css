@@ -208,13 +208,13 @@ h1 {
 
 .middleBtn {
   width: 40vw;
-  height: 3vh;
-  line-height: 3vh;
+  height: 5vh;
+  line-height: 5vh;
+  font-size: 2.5vh !important;
   overflow: hidden;
   text-wrap: nowrap;
   text-overflow: ellipsis;
   margin: 1vw 1vw;
-  padding-left: 5px;
   padding: 2.5px 0px 2.5px 5px;
 }
 
@@ -300,6 +300,19 @@ h1 {
 /* レスポンシブデザインのスタイル */
 @media (max-width: 768px) {
   /* iPhoneやGalaxyなどのスマホ用 */
+
+
+  .middleBtn {
+    width: 40vw;
+    height: 3vh;
+    line-height: 3vh;
+    overflow: hidden;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    margin: 1vw 1vw;
+    font-size: 1.5vh !important;
+    padding: 2.5px 0px 2.5px 5px;
+  }
 
   #pagination button,
   #pagination span {
