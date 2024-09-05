@@ -8,6 +8,17 @@
 #jp_map a:hover { opacity:.85; text-decoration:none; }
 #jp_map a span { display:block; margin:0 auto; padding:0; line-height:1.1em; text-align:center; position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); } 
 
+.hokkaido, .tohoku { background-color:#759ef4; text-shadow:#fff 1px 0px, #fff -1px 0px, #fff 0px -1px, #fff 1px -1px, #fff -1px -1px, #fff 0px 1px, #fff 1px 1px, #fff -1px 1px; border-width:1px; font-size:12px; }
+.kanto { background-color:#7ecfea; text-shadow:#fff 1px 0px, #fff -1px 0px, #fff 0px -1px, #fff 1px -1px, #fff -1px -1px, #fff 0px 1px, #fff 1px 1px, #fff -1px 1px; border-width:1px; font-size:12px; }
+.chubu { background-color:#7cdc92; text-shadow:#fff 1px 0px, #fff -1px 0px, #fff 0px -1px, #fff 1px -1px, #fff -1px -1px, #fff 0px 1px, #fff 1px 1px, #fff -1px 1px; border-width:1px; font-size:12px; }
+.tokai { background-color:#7cdc92; text-shadow:#fff 1px 0px, #fff -1px 0px, #fff 0px -1px, #fff 1px -1px, #fff -1px -1px, #fff 0px 1px, #fff 1px 1px, #fff -1px 1px; border-width:1px; font-size:12px; }
+.hokuriku { background-color:#c7b2de; text-shadow:#fff 1px 0px, #fff -1px 0px, #fff 0px -1px, #fff 1px -1px, #fff -1px -1px, #fff 0px 1px, #fff 1px 1px, #fff -1px 1px; border-width:1px; font-size:12px; }
+.kansai { background-color:#ffe966; text-shadow:#fff 1px 0px, #fff -1px 0px, #fff 0px -1px, #fff 1px -1px, #fff -1px -1px, #fff 0px 1px, #fff 1px 1px, #fff -1px 1px; border-width:1px; font-size:12px; }
+.chugoku { background-color:#ffcc66; text-shadow:#fff 1px 0px, #fff -1px 0px, #fff 0px -1px, #fff 1px -1px, #fff -1px -1px, #fff 0px 1px, #fff 1px 1px, #fff -1px 1px; border-width:1px; font-size:12px; }
+.shikoku { background-color:#ffbb9c; text-shadow:#fff 1px 0px, #fff -1px 0px, #fff 0px -1px, #fff 1px -1px, #fff -1px -1px, #fff 0px 1px, #fff 1px 1px, #fff -1px 1px; border-width:1px; font-size:12px; }
+.kyushu, .okinawa { background-color:#ffbdbd; text-shadow:#fff 1px 0px, #fff -1px 0px, #fff 0px -1px, #fff 1px -1px, #fff -1px -1px, #fff 0px 1px, #fff 1px 1px, #fff -1px 1px; border-width:1px; font-size:12px; }
+
+
 #jp_map .hokkaido a, #jp_map .tohoku a { background-color:#759ef4; }
 #jp_map .kanto a { background-color:#7ecfea; }
 #jp_map .chubu a { background-color:#7cdc92 }

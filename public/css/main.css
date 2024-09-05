@@ -1,13 +1,26 @@
+/* iOS 11.0 以下 
+constant(safe-area-inset-top)
+constant(safe-area-inset-right)
+constant(safe-area-inset-bottom)
+constant(safe-area-inset-left)
+*/
+/* iOS 11.2 以上 
+env(safe-area-inset-top)
+env(safe-area-inset-right)
+env(safe-area-inset-bottom)
+env(safe-area-inset-left)
+*/
+
 :root {
-	font-size: calc(10px + 1vmin);
-	--primary: hsl(45, 80%, 60%);
-	--darkGrey: #333344;
-	--mediumGrey: #557777;
-	--softGrey: #9a97a8;
-	--softTint: rgba(0, 0, 0, 0.2);
-	--bounce: 0.3s cubic-bezier(0.3, -0.3, 0.1, 1.4);
-	--ease: 0.5s cubic-bezier(0.3, 0.1, 0.3, 1);
-	--length: 2;
+  font-size: calc(10px + 1vmin);
+  --primary: hsl(45, 80%, 60%);
+  --darkGrey: #333344;
+  --mediumGrey: #557777;
+  --softGrey: #9a97a8;
+  --softTint: rgba(0, 0, 0, 0.2);
+  --bounce: 0.3s cubic-bezier(0.3, -0.3, 0.1, 1.4);
+  --ease: 0.5s cubic-bezier(0.3, 0.1, 0.3, 1);
+  --length: 2;
 }
 
 *,
@@ -29,19 +42,85 @@ body {
 .container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center; /* Center content horizontally */
+  justify-content: center;
   margin: 0 auto;
   padding: 10px;
   width: 100%;
   max-width: 1200px;
 }
 
-.container > div {
-  flex: 1 1 100%; /* Full width for single column layout */
+.container > .innerDiv {
+  flex: 1 1 100%;
   background-color: #fff;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+}
+
+.shop {
+  width: 100%;
+  height: auto;
+  background: #fff;
+  border: 1px solid #dfdfdf;
+  margin-top: 20px;
+}
+
+.shop-content {
+  width: 100%;
+  padding: 10px;
+}
+
+.shop-name {
+  font-weight: bold;
+  color: #000;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.shop-access {
+  font-size: 14px;
+  line-height: 20px;
+  display: -webkit-box;        /* Flexbox レイアウトを生成 (WebKit ブラウザ対応) */
+  display: -moz-box;           /* Mozilla ブラウザ対応 */
+  display: -ms-flexbox;        /* IE10 以上に対応 */
+  display: box;                /* 標準レイアウト方式 */
+  -webkit-line-clamp: 2;       /* 2行まで表示 (WebKit ブラウザのみ対応) */
+  -webkit-box-orient: vertical; /* テキストを縦方向に配置 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  white-space: normal; 
+}
+
+.shop-link{
+  opacity: 0;
+  animation: fadeInUp 0.6s ease forwards; 
+}
+
+.shop-link.fade-in {
+  opacity: 1;
+}
+
+.shop-image {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+}
+
+.shop-time{
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 12px;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 h1 {
@@ -50,27 +129,60 @@ h1 {
   margin-bottom: 20px;
 }
 
+#locationInput {
+  width: 300px;
+  padding: 10px;
+  margin-right: 10px;
+}
+
+#getLocationBtn {
+  display: none;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.radio-group {
+  display: flex;
+  gap: 1vw;
+  justify-content: center;
+  align-items: center;
+}
+
+.radio-group input[type="radio"] {
+  display: none;
+}
+
+.radio-group label {
+  cursor: pointer;
+  margin: 5px 10px;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.radio-group input[type="radio"]:checked + label {
+  font-weight: bold;
+}
+
 .shopHeader {
-    display: flex;
-    flex-direction: row;
-    background-color: #f4f4f4;
-    font-weight: bold;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .shopHeaderThumCell {
-    width: 120px;
-    max-width: 120px;
-    flex: 1;
-    border-bottom: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-  }
-  .shopHeaderCell {
-    padding: 12px;
-    flex: 1;
-    border-bottom: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-  }
+  display: flex;
+  flex-direction: row;
+  background-color: #f4f4f4;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+}
+
+.shopHeaderThumCell {
+  width: 120px;
+  max-width: 120px;
+  flex: 1;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+.shopHeaderCell {
+  padding: 12px;
+  flex: 1;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
 
 .shop-body {
   display: flex;
@@ -94,28 +206,30 @@ h1 {
 }
 
 .shop-img-cell {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 120px;
-    max-width: 120px;
-    height: 120px;
-    max-height: 120px;
-    flex: 1;
-    overflow: hidden;
-    border-right: 1px solid #ddd;
-    text-overflow: ellipsis;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  max-width: 120px;
+  height: 120px;
+  max-height: 120px;
+  flex: 1;
+  overflow: hidden;
+  border-right: 1px solid #ddd;
+  text-overflow: ellipsis;
+}
 
 .shop-row:nth-child(even) {
   background-color: #f9f9f9;
 }
 
 .shop-cell {
-  padding: 12px;
+  padding: 1vw;
   flex: 1;
   overflow: hidden;
-  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   border-right: 1px solid #ddd;
 }
 
@@ -124,6 +238,69 @@ h1 {
   font-weight: bold;
   display: block;
   margin-bottom: 5px;
+}
+
+.areaDiv {
+  display: grid;
+  justify-content: center;
+  flex-wrap: wrap;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1vw;
+  margin-top: 2vh;
+}
+
+.middleBtn {
+  width: 40vw;
+  height: 3vh;
+  line-height: 3vh;
+  overflow: hidden;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  margin: 1vw 1vw;
+  padding-left: 5px;
+  padding: 2.5px 0px 2.5px 5px;
+}
+
+.tab-container {
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+}
+
+.tabs {
+  display: flex;
+  position: relative;
+  border-radius: 0 !important;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  cursor: pointer;
+  padding: 1.5vh;
+  border: none;
+  background: none;
+  outline: none;
+  font-size: 16px;
+}
+
+.tab-slider {
+  height: 3px;
+  background-color: #dee2e6;
+  position: absolute;
+  border: 3px;
+  border-radius: 100px;
+  bottom: 0;
+  transition: left 0.3s ease, width 0.3s ease;
+}
+
+.tab-content {
+  display: none;
+  padding: 20px;
+}
+
+.tab-content.active {
+  display: block;
 }
 
 #pagination {
@@ -135,7 +312,9 @@ h1 {
 #pagination button,
 #pagination span {
   margin: 0 5px;
-  padding: 5px 10px;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  padding: 0 10px;
   border: 1px solid #ddd;
   background-color: #f5f5f5;
   cursor: pointer;
@@ -159,40 +338,14 @@ h1 {
 /* Responsive styles */
 @media (max-width: 768px) {
   /* iPhoneとGalaxy23 */
-  #shopTable {
-    display: block;
-  }
 
-  .shop-row {
-    display: block;
-    margin-bottom: 10px;
-  }
-
-  .shop-cell {
-    display: block;
-    text-align: right;
-    position: relative;
-    padding-left: 50%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .shop-cell::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 0;
-    width: 50%;
-    padding-left: 10px;
-    font-weight: bold;
-    text-align: left;
-    background-color: #f4f4f4;
-    color: #333;
-    border-right: 1px solid #ddd;
-  }
-
-  .shop-cell:last-child {
-    border-bottom: 0;
+  #pagination button,
+  #pagination span {
+    margin: 0 1px;
+    padding: 2.5px 10px;
+    border: 1px solid #ddd;
+    background-color: #f5f5f5;
+    cursor: pointer;
   }
 }
 

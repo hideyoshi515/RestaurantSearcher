@@ -3,7 +3,7 @@ const itemsPerPage = 10;
 let totalItems = 0;
 let shops = [];
 
-//Result.htmlに表示するためAPIに接続とフォールバック
+// Result.htmlに表示するためAPIに接続とフォールバック
 function getResult() {
   const urlParams = new URLSearchParams(window.location.search);
   let url = new URL(apiUrl);
@@ -19,9 +19,6 @@ function getResult() {
   }
   if (urlParams.has("large_area")) {
     url.searchParams.append("large_area", urlParams.get("large_area"));
-  } else {
-    url =
-      apiUrl + "&lat=35.689501375244&lng=139.69173371705&count=100&count=100";
   }
   if (urlParams.has("middle_area")) {
     url.searchParams.append("middle_area", urlParams.get("middle_area"));
@@ -53,7 +50,7 @@ function parseDetailXML(xmlString) {
   );
 }
 
-//xmlデータ処理
+// xmlデータ処理
 function handleXMLData(xmlDoc) {
   const shopElements = xmlDoc.getElementsByTagName("shop");
   totalItems = shopElements.length;
@@ -61,14 +58,15 @@ function handleXMLData(xmlDoc) {
   displayPage(currentPage);
 }
 
-//xmlからデータ抽出
+// xmlからデータ抽出
 function extractShopData(shop) {
   const shopid = shop.getElementsByTagName("id")[0].textContent;
   const name = shop.getElementsByTagName("name")[0].textContent;
   const access = shop.getElementsByTagName("access")[0].textContent;
-  const logoImage = shop.getElementsByTagName("s")[0].textContent;
+  const logoImage = shop.getElementsByTagName("l")[0].textContent;
   const photo = shop.getElementsByTagName("l")[0].textContent;
   const address = shop.getElementsByTagName("address")[0].textContent;
+  const open = shop.getElementsByTagName("open")[0].textContent;
 
   return {
     shopid,
@@ -77,10 +75,110 @@ function extractShopData(shop) {
     logoImage,
     photo,
     address,
+    open,
   };
 }
 
-//ページによりデータ表示
+function formatAccessInfo(access) {
+  return (
+    access
+      // "駅" かつ特定の語句が続かない場合に改行を追加
+      .replace(/駅(?!から|の|徒歩|より|隣|」|出|東|西|南|北|改|前)/g, "駅<br>")
+      // 既存の <br> タグを一時的に置き換える
+      .replace(/<br\s*\/?>/g, "__BR__")
+      // "徒歩"の前にあるスペースを統一し、不要な改行を防ぐ
+      .replace(/(\s*徒歩)/g, " 徒歩")
+      // "分"の後に数字や "徒" が続かない場合にのみ改行を追加
+      .replace(/分(?!\d|徒)/g, "分<br>")
+      // "。" または "/" の後に改行を追加
+      .replace(/。|\//g, "<br>")
+      // 不要な "、" や "！" の後で改行しない
+      .replace(/<br>、|<br>！/g, "<br>")
+      // 特定のデコレーション文字 "♪" の後に改行を追加
+      .replace(/♪/g, "<br>")
+      // 既存の <br> タグを元に戻す
+      .replace(/__BR__/g, "<br>")
+      // 連続する <br> を1つにまとめる
+      .replace(/(<br>\s*){2,}/g, "<br>")
+  );
+}
+
+// 営業時間データをフォーマットする関数
+function formatOperatingHours(open) {
+  return open
+    .split("\n") // 改行を基準に分割
+    .filter((line) => line.trim() !== "") // 空の行を削除
+    .map((line) => {
+      // 時間帯の間にスペースまたは区切りがない場合を処理する正規表現
+      let formattedLine = line.replace(/(\d{2}:\d{2})(\d{2}:\d{2})/g, "$1 $2");
+      // 括弧がある場合とない場合の処理
+      if (formattedLine.includes("（")) {
+        const [mainTime, rest] = formattedLine.split("（");
+        const [details, afterCloseParen] = rest.split("）");
+        formattedLine = `${mainTime.trim()}<br>（${details.trim()}）`;
+        // 括弧の後ろに追加の時間帯がある場合
+        if (afterCloseParen && afterCloseParen.trim() !== "") {
+          formattedLine += `<br>${afterCloseParen.trim()}`;
+        }
+      }
+      return formattedLine.trim();
+    })
+    .join("<br>");
+}
+
+// 店舗データを生成して表示する関数
+function createShopElement(shop) {
+  const { shopid, name, access, logoImage, open } = extractShopData(shop);
+
+  const shopLink = document.createElement("a");
+  shopLink.href = `detail.html?id=${shopid}`;  // shopのcodeをパラメータとしてURLに追加
+  shopLink.classList.add("shop-link");  // スタイル用のクラスを追加
+  shopLink.style.textDecoration = "none";  // テキストの装飾を削除
+  shopLink.style.color = "inherit";  // テキストカラーを継承
+
+  // 店舗全体のdivを作成
+  const shopDiv = document.createElement("div");
+  shopDiv.classList.add("shop");
+
+  // 店舗の画像を作成して追加
+  const shopImage = document.createElement("img");
+  shopImage.src = logoImage;
+  shopImage.classList.add("shop-image");
+  shopImage.alt = "Shop Image";
+  shopDiv.appendChild(shopImage);
+
+  // 店舗情報の内容を表示するdivを作成
+  const shopContentDiv = document.createElement("div");
+  shopContentDiv.classList.add("shop-content");
+
+  // 店舗名を追加
+  const shopName = document.createElement("p");
+  shopName.classList.add("shop-name");
+  shopName.textContent = name;
+  shopContentDiv.appendChild(shopName);
+
+  // アクセス情報を追加
+  const shopAccess = document.createElement("p");
+  shopAccess.classList.add("shop-access");
+  shopAccess.innerHTML = access;
+  shopContentDiv.appendChild(shopAccess);
+
+  // 営業時間をフォーマットして追加
+  const shopTime = document.createElement("p");
+  shopTime.classList.add("shop-time");
+  shopTime.innerHTML = formatOperatingHours(open);
+  shopContentDiv.appendChild(shopTime);
+
+  // 全ての内容をshopDivに追加
+  shopDiv.appendChild(shopContentDiv);
+
+  // shopDivをaタグに追加
+  shopLink.appendChild(shopDiv);
+
+  return shopLink;
+}
+
+// ページごとにデータを表示する関数
 function displayPage(page) {
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
@@ -90,47 +188,14 @@ function displayPage(page) {
 
   for (let i = startIndex; i < endIndex; i++) {
     const shop = shops[i];
-
-    // extractShopData データ抽出
-    const { shopid, name, access, logoImage } = extractShopData(shop);
-
-    // 各行をリンクで囲み
-    const row = document.createElement("a");
-    row.href = `detail.html?id=${shopid}`;
-    row.classList.add("shop-row");
-    row.style.textDecoration = "none";
-    row.style.color = "inherit";
-
-    // サムネール
-    const thumbnailCell = document.createElement("div");
-    thumbnailCell.classList.add("shop-img-cell");
-    const img = document.createElement("img");
-    img.src = logoImage;
-    img.alt = "Thumbnail";
-    img.style.width = "100px";
-    img.style.height = "auto";
-    thumbnailCell.appendChild(img);
-    row.appendChild(thumbnailCell);
-
-    // 店舗名
-    const nameCell = document.createElement("div");
-    nameCell.classList.add("shop-cell");
-    nameCell.textContent = name;
-    row.appendChild(nameCell);
-
-    // アクセス情報
-    const accessCell = document.createElement("div");
-    accessCell.classList.add("shop-cell");
-    accessCell.innerHTML = access;
-    row.appendChild(accessCell);
-
-    tableBody.appendChild(row);
+    const shopDiv = createShopElement(shop);
+    tableBody.appendChild(shopDiv); // 店舗情報をテーブルに追加
   }
 
-  updatePagination();
+  updatePagination(); // ページネーションの更新
 }
 
-//ページネーション
+// ページネーション
 function updatePagination() {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   let paginationHTML = "";
@@ -139,9 +204,9 @@ function updatePagination() {
   if (currentPage > 1) {
     paginationHTML += `<button class="pageBtn" onclick="changePage(${
       currentPage - 1
-    })">前へ</button>`;
+    })"><</button>`;
   } else {
-    paginationHTML += `<button class="pageBtn" disabled>前へ</button>`;
+    paginationHTML += `<button class="pageBtn" disabled><</button>`;
   }
 
   // ページボタンを生成
@@ -157,9 +222,9 @@ function updatePagination() {
   if (currentPage < totalPages) {
     paginationHTML += `<button class="pageBtn" onclick="changePage(${
       currentPage + 1
-    })">次へ</button>`;
+    })">></button>`;
   } else {
-    paginationHTML += `<button class="pageBtn" disabled>次へ</button>`;
+    paginationHTML += `<button class="pageBtn" disabled>></button>`;
   }
 
   const paginationDiv = document.createElement("div");
@@ -174,7 +239,7 @@ function updatePagination() {
   }
 }
 
-//ページ移動
+// ページ移動
 function changePage(page) {
   if (page >= 1 && page <= Math.ceil(totalItems / itemsPerPage)) {
     currentPage = page;
@@ -182,7 +247,7 @@ function changePage(page) {
   }
 }
 
-//URLのクエリパラメータからショップIDを取得し、詳細情報をAPIから取得して処理
+// URLのクエリパラメータからショップIDを取得し、詳細情報をAPIから取得して処理
 function getDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const shopId = urlParams.get("id");
@@ -194,7 +259,7 @@ function getDetail() {
     .catch((error) => console.error("Error:", error));
 }
 
-//URLのクエリパラメータからショップIDを取得し、エリア情報をAPIから取得して処理
+// URLのクエリパラメータからショップIDを取得し、エリア情報をAPIから取得して処理
 function getArea() {
   const urlParams = new URLSearchParams(window.location.search);
   const shopId = urlParams.get("id");
@@ -206,7 +271,7 @@ function getArea() {
     .catch((error) => console.error("Error:", error));
 }
 
-//XML 文字列をパースして、ショップの詳細情報を抽出し、表示関数に渡す
+// XML 文字列をパースして、ショップの詳細情報を抽出し、表示関数に渡す
 function parseDetailXML(xmlString) {
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(xmlString, "application/xml");
@@ -223,7 +288,7 @@ function parseDetailXML(xmlString) {
   }
 }
 
-//ショップの詳細情報を指定された HTML（#shopDetail）に表示
+// ショップの詳細情報を指定された HTML（#shopDetail）に表示
 function displayDetail(shop) {
   const detailContainer = document.querySelector("#shopDetail");
 
@@ -240,7 +305,7 @@ function displayDetail(shop) {
     `;
 }
 
-//クエリ文字列のパラメータを更新または追加し、URLを履歴に反映
+// クエリ文字列のパラメータを更新または追加し、URLを履歴に反映
 function updateQueryStringParameter(key, value) {
   const url = new URL(window.location.href);
   const params = new URLSearchParams(url.search);
