@@ -36,16 +36,17 @@ function getResult() {
     .then((data) => parseXML(data))
     .catch((error) => console.error("Error:", error));
 
-    if (urlParams.has("small_area")) {
-      let areaUrl = new URL(smallAreaNameUrl);
-      areaUrl.searchParams.append("small_area", urlParams.get("small_area"));
-      fetch(proxyUrl + encodeURIComponent(areaUrl))
-        .then((response) => response.text())
-        .then((data) => parseXMLName(data))
-        .catch((error) => console.error("Error:", error));
-    }else if (urlParams.has("lat") && urlParams.has("lng")) {
+  if (urlParams.has("small_area")) {
+    let areaUrl = new URL(smallAreaNameUrl);
+    areaUrl.searchParams.append("small_area", urlParams.get("small_area"));
+    fetch(proxyUrl + encodeURIComponent(areaUrl))
+      .then((response) => response.text())
+      .then((data) => parseXMLName(data))
+      .catch((error) => console.error("Error:", error));
+  } else if (urlParams.has("lat") && urlParams.has("lng")) {
     const xhr = new XMLHttpRequest();
-    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${urlParams.get("lat")}&lon=${urlParams.get("lng")}&accept-language=ja`;
+    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=
+    ${urlParams.get("lat")}&lon=${urlParams.get("lng")}&accept-language=ja`;
     xhr.open("GET", url, true);
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
@@ -55,13 +56,31 @@ function getResult() {
         const postcode = address.postcode;
         const city = address.city;
         const neighbourhood = address.neighbourhood || address.suburb;
-  
-        document.getElementById("areaName").innerHTML = `${postcode}, ${city}, ${neighbourhood}`;
+        let range = "1,000m";
+        switch (urlParams.get("range")) {
+          case 1:
+            range = "300m";
+            break;
+          case 2:
+            range = "500m";
+            break;
+          case 3:
+            range = "1,000m";
+            break;
+          case 4:
+            range = "2,000m";
+            break;
+          case 5:
+            range = "3,000m";
+            break;
+        }
+        document.getElementById(
+          "areaName"
+        ).innerHTML = `〒${postcode} ${neighbourhood}から${range}以内`;
       }
     };
     xhr.send();
   }
-    
 }
 
 // XMLデータを解析する関数
@@ -69,7 +88,9 @@ function parseXMLName(xmlString) {
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(xmlString, "application/xml");
   const areas = xmlDoc.getElementsByTagName("small_area");
-  document.getElementById("areaName").innerHTML = areas[0].getElementsByTagName("name")[0].textContent;
+  document.getElementById("areaName").innerHTML = areas[0].getElementsByTagName(
+    "name"
+  )[0].textContent;
 }
 
 // XMLデータを解析する関数
@@ -161,10 +182,10 @@ function createShopElement(shop) {
   const { shopid, name, access, logoImage, open } = extractShopData(shop);
 
   const shopLink = document.createElement("a");
-  shopLink.href = `detail.html?id=${shopid}`;  // shopのcodeをパラメータとしてURLに追加
-  shopLink.classList.add("shop-link");  // スタイル用のクラスを追加
-  shopLink.style.textDecoration = "none";  // テキストの装飾を削除
-  shopLink.style.color = "inherit";  // テキストカラーを継承
+  shopLink.href = `detail.html?id=${shopid}`; // shopのcodeをパラメータとしてURLに追加
+  shopLink.classList.add("shop-link"); // スタイル用のクラスを追加
+  shopLink.style.textDecoration = "none"; // テキストの装飾を削除
+  shopLink.style.color = "inherit"; // テキストカラーを継承
 
   const shopDiv = document.createElement("div");
   shopDiv.classList.add("shop");
@@ -203,13 +224,17 @@ function createShopElement(shop) {
 function displayPage(page) {
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
-  
+
   currentIndex = startIndex; // ページが変更された際にインデックスを初期化
   const shopListContainer = document.querySelector(".shopList");
   shopListContainer.innerHTML = ""; // 以前の項目をクリア
 
   // 初期ロード3件を表示
-  for (let i = currentIndex; i < currentIndex + initialLoadCount && i < endIndex; i++) {
+  for (
+    let i = currentIndex;
+    i < currentIndex + initialLoadCount && i < endIndex;
+    i++
+  ) {
     const shopElement = createShopElement(shops[i]);
     shopListContainer.appendChild(shopElement); // 店舗情報を追加
   }
@@ -231,9 +256,12 @@ function setupScrollLoad(endIndex) {
 // 追加で店舗をロードする関数
 function loadMoreShops(endIndex) {
   const shopListContainer = document.querySelector(".shopList");
-  
+
   // 追加でロードできる最大件数は10件まで
-  if (currentIndex < endIndex && currentIndex - ((currentPage - 1) * itemsPerPage) < maxLoadCount) {
+  if (
+    currentIndex < endIndex &&
+    currentIndex - (currentPage - 1) * itemsPerPage < maxLoadCount
+  ) {
     const shopElement = createShopElement(shops[currentIndex]);
     shopListContainer.appendChild(shopElement);
     currentIndex += shopIncrement; // 1件ずつ追加ロード
@@ -249,7 +277,9 @@ function updatePagination() {
 
   // 前のボタンを生成
   if (currentPage > 1) {
-    paginationHTML += `<button class="pageBtn" onclick="changePage(${currentPage - 1})"><</button>`;
+    paginationHTML += `<button class="pageBtn" onclick="changePage(${
+      currentPage - 1
+    })"><</button>`;
   } else {
     paginationHTML += `<button class="pageBtn" disabled><</button>`;
   }
@@ -265,7 +295,9 @@ function updatePagination() {
 
   // 次のボタンを生成
   if (currentPage < totalPages) {
-    paginationHTML += `<button class="pageBtn" onclick="changePage(${currentPage + 1})">></button>`;
+    paginationHTML += `<button class="pageBtn" onclick="changePage(${
+      currentPage + 1
+    })">></button>`;
   } else {
     paginationHTML += `<button class="pageBtn" disabled>></button>`;
   }
@@ -323,7 +355,9 @@ function parseDetailXML(xmlString) {
   const shopElement = xmlDoc.getElementsByTagName("shop")[0];
 
   if (shopElement) {
-    const { shopid, name, access, logoImage, photo, address } = extractShopData(shopElement);
+    const { shopid, name, access, logoImage, photo, address } = extractShopData(
+      shopElement
+    );
     displayDetail({ shopid, name, access, photo, address });
   } else {
     console.error("No shop details found.");
