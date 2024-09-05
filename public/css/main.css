@@ -1,10 +1,11 @@
-/* iOS 11.0 以下 
+/* 
+iOS 11.0 以下でsafe-area-insetを使用する
 constant(safe-area-inset-top)
 constant(safe-area-inset-right)
 constant(safe-area-inset-bottom)
 constant(safe-area-inset-left)
-*/
-/* iOS 11.2 以上 
+
+iOS 11.2 以上でsafe-area-insetを使用する
 env(safe-area-inset-top)
 env(safe-area-inset-right)
 env(safe-area-inset-bottom)
@@ -12,17 +13,19 @@ env(safe-area-inset-left)
 */
 
 :root {
-  font-size: calc(10px + 1vmin);
+  /* 基本的な色とスタイルの定義 */
+  font-size: calc(10px + 1vmin); /* ビューポートに応じたフォントサイズ */
   --primary: hsl(45, 80%, 60%);
   --darkGrey: #333344;
   --mediumGrey: #557777;
   --softGrey: #9a97a8;
   --softTint: rgba(0, 0, 0, 0.2);
-  --bounce: 0.3s cubic-bezier(0.3, -0.3, 0.1, 1.4);
-  --ease: 0.5s cubic-bezier(0.3, 0.1, 0.3, 1);
+  --bounce: 0.3s cubic-bezier(0.3, -0.3, 0.1, 1.4); /* バウンス効果 */
+  --ease: 0.5s cubic-bezier(0.3, 0.1, 0.3, 1); /* イージング効果 */
   --length: 2;
 }
 
+/* 基本的な要素のリセット */
 *,
 *::before,
 *::after {
@@ -53,10 +56,11 @@ body {
   flex: 1 1 100%;
   background-color: #fff;
   padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 影をつける */
+  border-radius: 8px; /* 角を丸くする */
 }
 
+/* 店舗情報のスタイル */
 .shop {
   width: 100%;
   height: auto;
@@ -80,36 +84,37 @@ body {
 .shop-access {
   font-size: 14px;
   line-height: 20px;
-  display: -webkit-box;        /* Flexbox レイアウトを生成 (WebKit ブラウザ対応) */
-  display: -moz-box;           /* Mozilla ブラウザ対応 */
-  display: -ms-flexbox;        /* IE10 以上に対応 */
-  display: box;                /* 標準レイアウト方式 */
-  -webkit-line-clamp: 2;       /* 2行まで表示 (WebKit ブラウザのみ対応) */
+  display: -webkit-box; /* Flexbox レイアウトを生成 (WebKit ブラウザ対応) */
+  display: -moz-box; /* Mozilla ブラウザ対応 */
+  display: -ms-flexbox; /* IE10 以上に対応 */
+  display: box; /* 標準レイアウト方式 */
+  -webkit-line-clamp: 2; /* 2行まで表示 (WebKit ブラウザのみ対応) */
   -webkit-box-orient: vertical; /* テキストを縦方向に配置 */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  word-break: break-word;
-  white-space: normal; 
+  overflow: hidden; /* テキストが溢れる場合に隠す */
+  text-overflow: ellipsis; /* テキストが溢れる場合に省略記号を表示 */
+  word-break: break-word; /* 単語を途中で切って改行 */
+  white-space: normal;
 }
 
-.shop-link{
+.shop-link {
   opacity: 0;
-  animation: fadeInUp 1s ease forwards; 
+  animation: fadeInUp 1s ease forwards; /* フェードインと上方向に移動するアニメーション */
 }
 
 .shop-link.fade-in {
   opacity: 1;
 }
 
+/* 画像のスタイル */
 .shop-image {
   width: 100%;
   height: 230px;
-  object-fit: cover;
+  object-fit: cover; /* 画像をボックスにフィット */
 }
 
-.shop-time{
-    color: rgba(0, 0, 0, 0.5);
-    font-size: 12px;
+.shop-time {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 12px;
 }
 
 @keyframes fadeInUp {
@@ -127,18 +132,21 @@ h1 {
   margin-bottom: 20px;
 }
 
+/* ロケーション入力フィールド */
 #locationInput {
   width: 300px;
   padding: 10px;
   margin-right: 10px;
 }
 
+/* ロケーションボタン */
 #getLocationBtn {
   display: none;
   padding: 10px 15px;
   cursor: pointer;
 }
 
+/* ラジオボタンのグループ */
 .radio-group {
   display: flex;
   gap: 1vw;
@@ -150,6 +158,7 @@ h1 {
   display: none;
 }
 
+/* ラジオボタンのラベル */
 .radio-group label {
   cursor: pointer;
   margin: 5px 10px;
@@ -160,6 +169,7 @@ h1 {
   font-weight: bold;
 }
 
+/* 店舗一覧のヘッダー */
 .shopHeader {
   display: flex;
   flex-direction: row;
@@ -180,62 +190,6 @@ h1 {
   flex: 1;
   border-bottom: 1px solid #ddd;
   border-right: 1px solid #ddd;
-}
-
-.shop-body {
-  display: flex;
-  flex-direction: column;
-}
-
-.shop-row {
-  border-bottom: 1px solid #ddd;
-  display: flex;
-  flex-direction: row;
-}
-
-.shop-img-cell img {
-  display: block;
-  text-align: center;
-  width: 100px;
-  height: 100px;
-  max-width: 100px;
-  max-height: 100px;
-  border-radius: 4px;
-}
-
-.shop-img-cell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 120px;
-  max-width: 120px;
-  height: 120px;
-  max-height: 120px;
-  flex: 1;
-  overflow: hidden;
-  border-right: 1px solid #ddd;
-  text-overflow: ellipsis;
-}
-
-.shop-row:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.shop-cell {
-  padding: 1vw;
-  flex: 1;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  border-right: 1px solid #ddd;
-}
-
-.shop-cell[data-label]::before {
-  content: attr(data-label);
-  font-weight: bold;
-  display: block;
-  margin-bottom: 5px;
 }
 
 .areaDiv {
@@ -259,6 +213,7 @@ h1 {
   padding: 2.5px 0px 2.5px 5px;
 }
 
+/* タブのコンテナ */
 .tab-container {
   width: 100%;
   max-width: 600px;
@@ -271,6 +226,7 @@ h1 {
   border-radius: 0 !important;
 }
 
+/* タブボタン */
 .tab {
   flex: 1;
   text-align: center;
@@ -282,6 +238,7 @@ h1 {
   font-size: 16px;
 }
 
+/* タブのスライダー */
 .tab-slider {
   height: 3px;
   background-color: #dee2e6;
@@ -292,6 +249,7 @@ h1 {
   transition: left 0.3s ease, width 0.3s ease;
 }
 
+/* タブのコンテンツ */
 .tab-content {
   display: none;
   padding: 20px;
@@ -301,6 +259,7 @@ h1 {
   display: block;
 }
 
+/* ページネーション */
 #pagination {
   display: flex;
   justify-content: center;
@@ -333,9 +292,9 @@ h1 {
   height: 36px;
 }
 
-/* Responsive styles */
+/* レスポンシブデザインのスタイル */
 @media (max-width: 768px) {
-  /* iPhoneとGalaxy23 */
+  /* iPhoneやGalaxyなどのスマホ用 */
 
   #pagination button,
   #pagination span {
@@ -350,13 +309,13 @@ h1 {
 /* FHD用 */
 @media (min-width: 1920px) {
   .container {
-    max-width: 1600px; /* 4k以上 */
+    max-width: 1600px; /* 4K以上の解像度 */
   }
 }
 
 @media (max-width: 2340px) and (min-width: 1080px) {
   .container {
-    padding: 15px; /* FHdからUHD */
+    padding: 15px; /* FHDからUHDまでのデバイス */
   }
 }
 
@@ -366,12 +325,14 @@ h1 {
   }
 }
 
+/* タブレット用 */
 @media (max-width: 1024px) {
   .container {
     padding: 10px;
   }
 }
 
+/* スマホ用 */
 @media (max-width: 768px) {
   .container {
     padding: 5px;
