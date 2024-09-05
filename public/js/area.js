@@ -124,7 +124,7 @@ function loadAreasToBtn(areaCode, divId, areaStyle, size) {
       };
     } else if (size === "small") {
       selectBtn.onclick = function() {
-        window.location.href = `result.html?small_area=${code}`;
+        window.location.href = `result.html?small_area=${code}&count=100`;
       };
     }
     currentDiv.appendChild(selectBtn);

@@ -20,8 +20,10 @@ function showPosition(position) {
       const city = address.city;
       const neighbourhood = address.neighbourhood || address.suburb;
 
-      document.getElementById("locationInput").value = `${postcode}, ${city}, ${neighbourhood}`;
-      document.getElementById("getLocationBtn").style.display = 'none';
+      document.getElementById(
+        "locationInput"
+      ).value = `${postcode}, ${city}, ${neighbourhood}`;
+      document.getElementById("getLocationBtn").style.display = "none";
     }
   };
   xhr.send();
@@ -54,31 +56,35 @@ document.addEventListener("DOMContentLoaded", () => {
   const rangeSlider = document.getElementById("rangeSlider");
   const radioButtons = document.querySelectorAll('input[name="range"]');
 
-  // ラジオボタンが選択されたときにスライダーを同期する関数
-  function syncRangeSlider() {
-    const checkedRadio = document.querySelector('input[name="range"]:checked');
-    if (checkedRadio) {
-      rangeSlider.value = checkedRadio.value;
+  if (rangeSlider != null) {
+    // ラジオボタンが選択されたときにスライダーを同期する関数
+    function syncRangeSlider() {
+      const checkedRadio = document.querySelector(
+        'input[name="range"]:checked'
+      );
+      if (checkedRadio) {
+        rangeSlider.value = checkedRadio.value;
+      }
     }
-  }
 
-  // ラジオボタンの値が変更されたときにスライダーを同期
-  radioButtons.forEach((radio) => {
-    radio.addEventListener("change", syncRangeSlider);
-  });
-
-  // スライダーの値が変更されたときにラジオボタンを同期する関数
-  function syncRadioButtons() {
-    const value = rangeSlider.value;
+    // ラジオボタンの値が変更されたときにスライダーを同期
     radioButtons.forEach((radio) => {
-      radio.checked = radio.value === value;
+      radio.addEventListener("change", syncRangeSlider);
     });
+
+    // スライダーの値が変更されたときにラジオボタンを同期する関数
+    function syncRadioButtons() {
+      const value = rangeSlider.value;
+      radioButtons.forEach((radio) => {
+        radio.checked = radio.value === value;
+      });
+    }
+
+    // スライダーの値が変更されたときにラジオボタンを同期
+    rangeSlider.addEventListener("input", syncRadioButtons);
+
+    // 初期ロード時に同期する
+    syncRangeSlider();
+    syncRadioButtons();
   }
-
-  // スライダーの値が変更されたときにラジオボタンを同期
-  rangeSlider.addEventListener("input", syncRadioButtons);
-
-  // 初期ロード時に同期する
-  syncRangeSlider();
-  syncRadioButtons();
 });
