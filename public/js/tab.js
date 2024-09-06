@@ -1,6 +1,6 @@
 function switchTab(event, tabName) {
   // タブコンテンツを隠す
-  var i, tabcontent, tablinks;
+  let i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tab-content");
   for (i = 0; i < tabcontent.length; i++) {
     tabcontent[i].style.display = "none";
@@ -17,8 +17,8 @@ function switchTab(event, tabName) {
   event.currentTarget.classList.add("active");
 
   // スライダーを移動
-  var slider = document.querySelector(".tab-slider");
-  var activeTab = event.currentTarget;
+  const slider = document.querySelector(".tab-slider");
+  const activeTab = event.currentTarget;
   slider.style.width = activeTab.offsetWidth + "px";
   slider.style.left = activeTab.offsetLeft + "px";
 }

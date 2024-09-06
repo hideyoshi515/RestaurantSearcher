@@ -83,13 +83,13 @@ function loadListFromLocalStorage() {
     const data = localStorage.getItem(storageKey);
     if (data) {
         const parsedData = JSON.parse(data);  // JSON文字列を配列に変換
-        console.log('localStorageからロードされたデータ:', parsedData);  // コンソールに出力
         // 既存のOrderedLimitedListを更新
         myList = new OrderedLimitedList(MAX_SIZE);
         parsedData.forEach(item => myList.add(item));  // 既存データをリストに追加
     } else {
         myList = new OrderedLimitedList(MAX_SIZE); // データがなければ空のリストを作成
     }
+    return myList;
 }
 
 // ページが読み込まれたときにリストをロードする

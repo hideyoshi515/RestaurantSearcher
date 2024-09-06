@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="css/map_of_japan.css" />
     <title>Index</title>
   </head>
-  <body onload="getLocation()">
+  <body>
     <div class="container">
       <div class="innerDiv" style="padding: 0 !important;">
         <div class="tab-container">
@@ -31,22 +31,27 @@
           </div>
 
           <div id="Tab1" class="tab-content">
-            <div name="searchForm" style="">
-              <div style="display: flex; justify-content: center;">
-                <img src="img/map.png" style="width: 50%;" />
-              </div>
-              <div
-                class="select"
-                style="display: flex; justify-content: center; gap: 1vw;"
-              >
-              <input type="range" id="rangeSlider" name="rangeSlider" min="1" max="5" value="3" style="width: 85%;" />
+            <div name="searchForm">
+              <a href="#" onclick="getLocation()">
+                <div style="display: flex; justify-content: center;">
+                  <img src="img/map.png" style="width: 50%;" />
+                </div>
+              </a>
+              <div class="select" style="display: flex; justify-content: center; gap: 1vw;">
+                <input class="rangeInput" type="range" id="rangeSlider" name="rangeSlider" min="1" max="5" value="3" style="width: 82.5%;"/>
               </div>
               <div class="radio-group">
                 <input type="radio" name="range" value="1" id="radio1" />
                 <label for="radio1">300m</label>
                 <input type="radio" name="range" value="2" id="radio2" />
                 <label for="radio2">500m</label>
-                <input type="radio" name="range" value="3" id="radio3" checked />
+                <input
+                  type="radio"
+                  name="range"
+                  value="3"
+                  id="radio3"
+                  checked
+                />
                 <label for="radio3">1,000m</label>
                 <input type="radio" name="range" value="4" id="radio4" />
                 <label for="radio4">2,000m</label>
@@ -54,8 +59,18 @@
                 <label for="radio5">3,000m</label>
               </div>
               <label for="locationInput">現在位置: </label>
-              <input type="text" id="locationInput" value="XXXXXXXXXXX" readonly />
-              <button id="getLocationBtn" onclick="getLocation()">위치 가져오기</button>
+              <input
+                type="text"
+                id="locationInput"
+                value="XXXXXXXXXXX"
+                readonly
+              />
+              <button id="getLocationBtn" onclick="getLocation()">
+                Get GPS
+              </button>
+            </div>
+            <div id="historyDiv">
+
             </div>
           </div>
           <div id="Tab2" class="tab-content">

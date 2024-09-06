@@ -42,7 +42,6 @@ function showPosition(position) {
 
 // ユーザーの位置情報を取得するために Geolocation API を呼び出し
 function getLocation() {
-  loadListFromLocalStorage("shopHistory");
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(showPosition, showError);
   }
@@ -87,5 +86,51 @@ document.addEventListener("DOMContentLoaded", () => {
     // 初期ロード時に同期する
     syncRangeSlider();
     syncRadioButtons();
+  }
+
+  if (location.href.indexOf("index.html") > 0) {
+    const historiesDiv = document.getElementById("historyDiv");
+    const shopHistory = loadListFromLocalStorage("shopHistory");
+    shopHistory.getList().forEach((element) => {
+      const areaName = element.split(":")[0];
+      const areaCode = element.split(":")[1];
+      const searchRange = element.split(":")[2];
+
+      const searchLink = document.createElement("a");
+      searchLink.style.textDecoration = "none"; // テキストの装飾を削除
+      searchLink.style.color = "inherit"; // テキストカラーを継承
+
+      const historyDiv = document.createElement("div");
+      historyDiv.classList.add("shopHistories");
+      if (searchRange > 5) {
+        console.log(`${areaName} 周辺 ${areaCode}`);
+        searchLink.href = `result.html?small_area=${areaCode}&count=100`;
+        historyDiv.innerHTML = `${areaName} 周辺`;
+      } else {
+        searchLink.href = `result.html?range=${searchRange}&${areaCode}&count=100`;
+        let range = "1,000m";
+        switch (searchRange) {
+          case 1:
+            range = "300m";
+            break;
+          case 2:
+            range = "500m";
+            break;
+          case 3:
+            range = "1,000m";
+            break;
+          case 4:
+            range = "2,000m";
+            break;
+          case 5:
+            range = "3,000m";
+            break;
+        }
+        console.log(`${areaName} ${range}以内`);
+        historyDiv.innerHTML = `${areaName} ${range}以内`;
+      }
+      searchLink.appendChild(historyDiv);
+      historiesDiv.appendChild(searchLink);
+    });
   }
 });

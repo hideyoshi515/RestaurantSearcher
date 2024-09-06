@@ -21,6 +21,9 @@ function getResult() {
   if (urlParams.has("lng")) {
     url.searchParams.append("lng", urlParams.get("lng"));
   }
+  if (urlParams.has("lon")) {
+    url.searchParams.append("lng", urlParams.get("lon"));
+  }
   if (urlParams.has("large_area")) {
     url.searchParams.append("large_area", urlParams.get("large_area"));
   }
@@ -116,7 +119,7 @@ function handleXMLData(xmlDoc) {
 function extractShopData(shop) {
   const shopid = shop.getElementsByTagName("id")[0].textContent;
   const name = shop.getElementsByTagName("name")[0].textContent;
-  const access = shop.getElementsByTagName("access")[0].textContent;
+  const access = shop.getElementsByTagName("mobile_access")[0].textContent;
   const logoImage = shop.getElementsByTagName("l")[0].textContent;
   const photo = shop.getElementsByTagName("l")[0].textContent;
   const address = shop.getElementsByTagName("address")[0].textContent;
