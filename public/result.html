@@ -4,19 +4,37 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="js/api.js"></script>
-    <script src="js/area.js"></script>
-    <script src="js/geo.js"></script>
+    <script src="js/area.js" defer></script>
+    <script src="js/geo.js" defer></script>
     <script src="js/hotpepper.js"></script>
     <script src="js/list.js"></script>
+    <script src="js/modal.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap"
+    />
     <link rel="stylesheet" href="css/main.css" />
     <title>Index</title>
   </head>
   <body onload="getResult()">
+    <div id="dataLoading" style="display: block; height: 100vh;">
+      <div style="display: flex; justify-content: center; align-items: center;">
+        <img src="img/loading.gif" style="padding: 10vh 0; width: 50%;" />
+      </div>
+    </div>
+    <div id="detailModal" class="modal">
+      <div class="modal-content">
+        <div id="modalBody">modalBody</div>
+      </div>
+    </div>
+
     <div class="container">
       <div id="shopTable">
-        <div class="shopHeader">
-            <div class="shopHeaderCell" id="areaName">地域名</div>
-        </div>
+        <a class="shopHeader" href="index.html">
+          <div class="shopHeaderCell" id="areaName">地域名</div>
+        </a>
         <div class="shopList"></div>
       </div>
     </div>

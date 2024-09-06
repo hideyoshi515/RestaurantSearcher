@@ -97,20 +97,19 @@ function loadAreasToBtn(areaCode, divId, areaStyle, size) {
   const createButtonDiv = () => {
     const buttonDiv = document.createElement("div");
     buttonDiv.style.display = "flex";
+    buttonDiv.style.flex = "1";
+    buttonDiv.style.width = "100%";
     return buttonDiv;
   };
 
   const createTransparentDiv = () => {
     const transparentDiv = document.createElement("div");
-    transparentDiv.style.width = "40vw";
-    transparentDiv.style.margin = "1vw";
-    transparentDiv.style.visibility = "hidden";
+    transparentDiv.classList.add("transparentDiv");
     transparentDiv.style.flex = "1";
     return transparentDiv;
   };
 
   let currentDiv = createButtonDiv();
-
   const appendButtonToDiv = (code, name) => {
     const selectBtn = document.createElement("button");
     selectBtn.classList.add(areaStyle);
@@ -118,6 +117,7 @@ function loadAreasToBtn(areaCode, divId, areaStyle, size) {
     selectBtn.textContent = name;
     selectBtn.style.border = 0;
     selectBtn.style.borderRadius = "1vh";
+    selectBtn.style.flex = "1";
     if (size === "middle") {
       selectBtn.onclick = function() {
         selectMap(code, 'smallArea', areaStyle);
@@ -165,9 +165,6 @@ function loadAreasToBtn(areaCode, divId, areaStyle, size) {
   }
 }
 
-
-// DOMロードが完了後
-document.addEventListener("DOMContentLoaded", () => {
   const largeSelect = document.getElementById("largeSelect");
   const middleSelect = document.getElementById("middleSelect");
   const smallSelect = document.getElementById("smallSelect");
@@ -263,4 +260,4 @@ document.addEventListener("DOMContentLoaded", () => {
     loadMiddleAreas("");
     console.log("initialize");
   }
-});
+

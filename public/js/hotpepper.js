@@ -7,97 +7,92 @@ const initialLoadCount = 3; // 初回に表示する店舗の件数（3件）
 const maxLoadCount = 10; // スクロールで追加できる最大件数（10件まで）
 const shopIncrement = 1; // スクロール時に追加ロードする店舗の件数（1件）
 
-// Result.htmlに表示するためAPIに接続とフォールバック
-function getResult() {
+// URLパラメータからAPI用のURLを生成
+function generateApiUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   let url = new URL(apiUrl);
   url.searchParams.append("count", "100");
-  if (urlParams.has("range")) {
-    url.searchParams.append("range", urlParams.get("range"));
-  }
-  if (urlParams.has("lat")) {
-    url.searchParams.append("lat", urlParams.get("lat"));
-  }
-  if (urlParams.has("lng")) {
-    url.searchParams.append("lng", urlParams.get("lng"));
-  }
+  
+  // 各エリア情報をパラメータに追加
+  ["range", "lat", "lng", "lon", "large_area", "middle_area", "small_area"].forEach(param => {
+    if (urlParams.has(param)) {
+      url.searchParams.append(param, urlParams.get(param));
+    }
+  });
   if (urlParams.has("lon")) {
     url.searchParams.append("lng", urlParams.get("lon"));
   }
-  if (urlParams.has("large_area")) {
-    url.searchParams.append("large_area", urlParams.get("large_area"));
-  }
-  if (urlParams.has("middle_area")) {
-    url.searchParams.append("middle_area", urlParams.get("middle_area"));
-  }
-  if (urlParams.has("small_area")) {
-    url.searchParams.append("small_area", urlParams.get("small_area"));
-  }
+  return url;
+}
 
+// APIに接続して結果を取得する関数
+function getResult() {
+  const url = generateApiUrl();
+  
+  const dataLoading = document.getElementById("dataLoading");
+  
   fetch(proxyUrl + encodeURIComponent(url))
     .then((response) => response.text())
     .then((data) => parseXML(data))
-    .catch((error) => console.error("Error:", error));
+    .catch((error) => console.error("Error:", error))
+    .finally(() => {
+      dataLoading.style.display = "none";
+    });
 
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  // エリア名をAPIから取得
   if (urlParams.has("small_area")) {
-    let areaUrl = new URL(smallAreaNameUrl);
-    areaUrl.searchParams.append("small_area", urlParams.get("small_area"));
-    fetch(proxyUrl + encodeURIComponent(areaUrl))
-      .then((response) => response.text())
-      .then((data) => parseXMLName(data))
-      .catch((error) => console.error("Error:", error));
-  } else if (urlParams.has("lat") && urlParams.has("lng")) {
-    const xhr = new XMLHttpRequest();
-    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=
-    ${urlParams.get("lat")}&lon=${urlParams.get("lng")}&accept-language=ja`;
-    xhr.open("GET", url, true);
-    xhr.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
-        const response = JSON.parse(this.responseText);
-        const name = response.name || "none";
-        const address = response.address;
-        const postcode = address.postcode;
-        const city = address.city;
-        const neighbourhood = address.neighbourhood || address.suburb;
-        let range = "1,000m";
-        switch (urlParams.get("range")) {
-          case 1:
-            range = "300m";
-            break;
-          case 2:
-            range = "500m";
-            break;
-          case 3:
-            range = "1,000m";
-            break;
-          case 4:
-            range = "2,000m";
-            break;
-          case 5:
-            range = "3,000m";
-            break;
-        }
-        document.getElementById(
-          "areaName"
-        ).innerHTML = `〒${postcode} ${neighbourhood}から${range}以内`;
-        addItemToList(neighbourhood + ":"+ `lat=${urlParams.get("lat")}&lon=${urlParams.get("lng")}` + ":" + urlParams.get("range"));
-        saveListToLocalStorage("shopHistory");
-      }
-    };
-    xhr.send();
+    fetchAreaName(urlParams.get("small_area"));
+  } else if (urlParams.has("lat") && (urlParams.has("lng")||urlParams.has("lon"))) {
+    const longtitue = urlParams.has("lng") ? urlParams.get("lng") : urlParams.get("lon");
+    fetchLocationInfo(urlParams.get("lat"), longtitue, urlParams.get("range"));
   }
 }
 
-// XMLデータを解析する関数
-function parseXMLName(xmlString) {
-  const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(xmlString, "application/xml");
-  const areas = xmlDoc.getElementsByTagName("small_area");
-  const name = areas[0].getElementsByTagName("name")[0].textContent;
-  const areaCode = areas[0].getElementsByTagName("code")[0].textContent;
-  document.getElementById("areaName").innerHTML = name;
-  addItemToList(name + ":" + areaCode + ":6");
-  saveListToLocalStorage("shopHistory");
+// エリア名を取得する関数
+function fetchAreaName(smallArea) {
+  let areaUrl = new URL(smallAreaNameUrl);
+  areaUrl.searchParams.append("small_area", smallArea);
+  fetch(proxyUrl + encodeURIComponent(areaUrl))
+    .then((response) => response.text())
+    .then((data) => parseXMLName(data))
+    .catch((error) => console.error("Error:", error));
+}
+
+// 緯度と経度を使用して位置情報を取得する関数
+function fetchLocationInfo(lat, lng, range) {
+  const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=ja`;
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      const address = data.address;
+      const neighbourhood = address.neighbourhood || address.suburb;
+      let rangeText = getRangeText(range);
+      
+      document.getElementById("areaName").innerHTML = `〒${address.postcode} ${neighbourhood}から${rangeText}以内`;
+      addItemToList(`${neighbourhood}:lat=${lat}&lon=${lng}:${range}`);
+      saveListToLocalStorage("shopHistory");
+    })
+    .catch((error) => console.error("Error:", error));
+}
+
+// 距離範囲のテキストを取得する関数
+function getRangeText(range) {
+  switch (range) {
+    case "1":
+      return "300m";
+    case "2":
+      return "500m";
+    case "3":
+      return "1,000m";
+    case "4":
+      return "2,000m";
+    case "5":
+      return "3,000m";
+    default:
+      return "1,000m";
+  }
 }
 
 // XMLデータを解析する関数
@@ -105,6 +100,17 @@ function parseXML(xmlString) {
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(xmlString, "application/xml");
   handleXMLData(xmlDoc);
+}
+
+// エリア名のXMLを解析する関数
+function parseXMLName(xmlString) {
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(xmlString, "application/xml");
+  const name = xmlDoc.getElementsByTagName("name")[0].textContent;
+  const small_area_code = xmlDoc.getElementsByTagName("code")[0].textContent;
+  document.getElementById("areaName").innerHTML = name;
+  addItemToList(`${name}:${small_area_code}:6`);
+  saveListToLocalStorage("shopHistory");
 }
 
 // XMLデータの処理
@@ -115,13 +121,12 @@ function handleXMLData(xmlDoc) {
   displayPage(currentPage); // ページごとに最初に表示する
 }
 
-// XMLから店舗データを抽出する関数
+// 店舗データを抽出する関数
 function extractShopData(shop) {
   const shopid = shop.getElementsByTagName("id")[0].textContent;
   const name = shop.getElementsByTagName("name")[0].textContent;
   const access = shop.getElementsByTagName("mobile_access")[0].textContent;
   const logoImage = shop.getElementsByTagName("l")[0].textContent;
-  const photo = shop.getElementsByTagName("l")[0].textContent;
   const address = shop.getElementsByTagName("address")[0].textContent;
   const open = shop.getElementsByTagName("open")[0].textContent;
 
@@ -130,7 +135,6 @@ function extractShopData(shop) {
     name,
     access,
     logoImage,
-    photo,
     address,
     open,
   };
@@ -138,50 +142,21 @@ function extractShopData(shop) {
 
 // アクセス情報をフォーマットする関数
 function formatAccessInfo(access) {
-  return (
-    access
-      // "駅" かつ特定の語句が続かない場合に改行を追加
-      .replace(/駅(?!から|の|徒歩|より|隣|」|出|東|西|南|北|改|前)/g, "駅<br>")
-      // 既存の <br> タグを一時的に置き換える
-      .replace(/<br\s*\/?>/g, "__BR__")
-      // "徒歩"の前にあるスペースを統一し、不要な改行を防ぐ
-      .replace(/(\s*徒歩)/g, " 徒歩")
-      // "分"の後に数字や "徒" が続かない場合にのみ改行を追加
-      .replace(/分(?!\d|徒)/g, "分<br>")
-      // "。" または "/" の後に改行を追加
-      .replace(/。|\//g, "<br>")
-      // 不要な "、" や "！" の後で改行しない
-      .replace(/<br>、|<br>！/g, "<br>")
-      // 特定のデコレーション文字 "♪" の後に改行を追加
-      .replace(/♪/g, "<br>")
-      // 既存の <br> タグを元に戻す
-      .replace(/__BR__/g, "<br>")
-      // 連続する <br> を1つにまとめる
-      .replace(/(<br>\s*){2,}/g, "<br>")
-  );
+  return access
+    .replace(/駅(?!から|の|徒歩|より|隣|」|出|東|西|南|北|改|前)/g, "駅<br>")
+    .replace(/<br\s*\/?>/g, "__BR__")
+    .replace(/(\s*徒歩)/g, " 徒歩")
+    .replace(/分(?!\d|徒)/g, "分<br>")
+    .replace(/。|\//g, "<br>")
+    .replace(/<br>、|<br>！/g, "<br>")
+    .replace(/♪/g, "<br>")
+    .replace(/__BR__/g, "<br>")
+    .replace(/(<br>\s*){2,}/g, "<br>");
 }
 
 // 営業時間データをフォーマットする関数
 function formatOperatingHours(open) {
-  return open
-    .split("\n") // 改行を基準に分割
-    .filter((line) => line.trim() !== "") // 空の行を削除
-    .map((line) => {
-      // 時間帯の間にスペースまたは区切りがない場合を処理する正規表現
-      let formattedLine = line.replace(/(\d{2}:\d{2})(\d{2}:\d{2})/g, "$1 $2");
-      // 括弧がある場合とない場合の処理
-      if (formattedLine.includes("（")) {
-        const [mainTime, rest] = formattedLine.split("（");
-        const [details, afterCloseParen] = rest.split("）");
-        formattedLine = `${mainTime.trim()}<br>（${details.trim()}）`;
-        // 括弧の後ろに追加の時間帯がある場合
-        if (afterCloseParen && afterCloseParen.trim() !== "") {
-          formattedLine += `<br>${afterCloseParen.trim()}`;
-        }
-      }
-      return formattedLine.trim();
-    })
-    .join("<br>");
+  return open.split("\n").filter((line) => line.trim() !== "").join("<br>");
 }
 
 // 店舗データを生成して表示する関数
@@ -189,10 +164,11 @@ function createShopElement(shop) {
   const { shopid, name, access, logoImage, open } = extractShopData(shop);
 
   const shopLink = document.createElement("a");
-  shopLink.href = `detail.html?id=${shopid}`; // shopのcodeをパラメータとしてURLに追加
   shopLink.classList.add("shop-link"); // スタイル用のクラスを追加
   shopLink.style.textDecoration = "none"; // テキストの装飾を削除
   shopLink.style.color = "inherit"; // テキストカラーを継承
+  shopLink.href = "javascript:void(0)";
+  shopLink.setAttribute('onclick', `openModal('${shopid}')`);
 
   const shopDiv = document.createElement("div");
   shopDiv.classList.add("shop");
@@ -213,7 +189,7 @@ function createShopElement(shop) {
 
   const shopAccess = document.createElement("p");
   shopAccess.classList.add("shop-access");
-  shopAccess.innerHTML = access;
+  shopAccess.innerHTML = formatAccessInfo(access);
   shopContentDiv.appendChild(shopAccess);
 
   const shopTime = document.createElement("p");
@@ -236,18 +212,14 @@ function displayPage(page) {
   const shopListContainer = document.querySelector(".shopList");
   shopListContainer.innerHTML = ""; // 以前の項目をクリア
 
-  // 初期ロード3件を表示
-  for (
-    let i = currentIndex;
-    i < currentIndex + initialLoadCount && i < endIndex;
-    i++
-  ) {
+  for (let i = currentIndex; i < currentIndex + initialLoadCount && i < endIndex; i++) {
     const shopElement = createShopElement(shops[i]);
-    shopListContainer.appendChild(shopElement); // 店舗情報を追加
+    shopListContainer.appendChild(shopElement);
   }
+
   currentIndex += initialLoadCount; // 3件ロード後にインデックスを更新
 
-  // スクロールイベントを設定
+  // スクロールイベントの設定
   setupScrollLoad(endIndex);
 }
 
@@ -264,11 +236,7 @@ function setupScrollLoad(endIndex) {
 function loadMoreShops(endIndex) {
   const shopListContainer = document.querySelector(".shopList");
 
-  // 追加でロードできる最大件数は10件まで
-  if (
-    currentIndex < endIndex &&
-    currentIndex - (currentPage - 1) * itemsPerPage < maxLoadCount
-  ) {
+  if (currentIndex < endIndex && currentIndex - (currentPage - 1) * itemsPerPage < maxLoadCount) {
     const shopElement = createShopElement(shops[currentIndex]);
     shopListContainer.appendChild(shopElement);
     currentIndex += shopIncrement; // 1件ずつ追加ロード
@@ -282,15 +250,12 @@ function updatePagination() {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   let paginationHTML = "";
 
-  // 前のボタンを生成
   if (currentPage > 1) {
-    paginationHTML += `<button class="pageBtn" onclick="changePage(${currentPage - 1
-      })"><</button>`;
+    paginationHTML += `<button class="pageBtn" onclick="changePage(${currentPage - 1})"><</button>`;
   } else {
     paginationHTML += `<button class="pageBtn" disabled><</button>`;
   }
 
-  // ページボタンを生成
   for (let i = 1; i <= totalPages; i++) {
     if (i === currentPage) {
       paginationHTML += `<span class="current pageBtn">${i}</span>`;
@@ -299,10 +264,8 @@ function updatePagination() {
     }
   }
 
-  // 次のボタンを生成
   if (currentPage < totalPages) {
-    paginationHTML += `<button class="pageBtn" onclick="changePage(${currentPage + 1
-      })">></button>`;
+    paginationHTML += `<button class="pageBtn" onclick="changePage(${currentPage + 1})">></button>`;
   } else {
     paginationHTML += `<button class="pageBtn" disabled>></button>`;
   }
@@ -327,95 +290,4 @@ function changePage(page) {
     window.scrollTo(0, 0); // ページの最上部にスクロール
     displayPage(currentPage); // ページ表示
   }
-}
-
-// URLのクエリパラメータからショップIDを取得し、詳細情報をAPIから取得して処理
-function getDetail() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const shopId = urlParams.get("id");
-
-  const url = `${apiUrl}&id=${shopId}`;
-  fetch(proxyUrl + encodeURIComponent(url))
-    .then((response) => response.text())
-    .then((data) => parseDetailXML(data))
-    .catch((error) => console.error("Error:", error));
-}
-
-// URLのクエリパラメータからショップIDを取得し、エリア情報をAPIから取得して処理
-function getArea() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const shopId = urlParams.get("id");
-
-  const url = `${apiUrl}&id=${shopId}`;
-  fetch(proxyUrl + encodeURIComponent(url))
-    .then((response) => response.text())
-    .then((data) => parseDetailXML(data))
-    .catch((error) => console.error("Error:", error));
-}
-
-// XML 文字列をパースして、ショップの詳細情報を抽出し、表示関数に渡す
-function parseDetailXML(xmlString) {
-  const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(xmlString, "application/xml");
-  const shopElement = xmlDoc.getElementsByTagName("shop")[0];
-
-  if (shopElement) {
-    const { shopid, name, access, logoImage, photo, address } = extractShopData(
-      shopElement
-    );
-    displayDetail({ shopid, name, access, photo, address });
-  } else {
-    console.error("No shop details found.");
-  }
-}
-
-// ショップの詳細情報を指定された HTML（#shopDetail）に表示
-function displayDetail(shop) {
-  const detailContainer = document.querySelector("#shopDetail");
-
-  if (!detailContainer) {
-    console.error("Detail container not found.");
-    return;
-  }
-
-  detailContainer.innerHTML = `
-      <div><img src="${shop.photo}" alt="Thumbnail" style="width: 200px; height: auto;"></div>
-      <p><strong>Name:</strong> ${shop.name}</p>
-      <p><strong>Access:</strong> ${shop.access}</p>
-      <p><strong>Address:</strong> ${shop.address}</p>
-    `;
-}
-
-// クエリ文字列のパラメータを更新または追加し、URLを履歴に反映
-function updateQueryStringParameter(key, value) {
-  const url = new URL(window.location.href);
-  const params = new URLSearchParams(url.search);
-
-  // 既存のパラメータがある場合は値を更新し、ない場合は追加
-  params.set(key, value);
-
-  // URLを更新
-  window.history.replaceState({}, "", `${url.pathname}?${params.toString()}`);
-}
-
-// セレクトボックスから選択されたエリアコードを基にURLを生成してリダイレクト
-function searchAreaCode() {
-  const large_area = document.querySelector("#largeSelect").value;
-  const middle_area = document.querySelector("#middleSelect").value;
-  const small_area = document.querySelector("#smallSelect").value;
-
-  const baseUrl = "result.html";
-  const params = new URLSearchParams();
-  if (large_area != "") {
-    params.set("large_area", large_area);
-  }
-  if (middle_area != "") {
-    params.set("middle_area", middle_area);
-  }
-  if (small_area != "") {
-    params.set("small_area", small_area);
-  }
-  params.set("count", 100);
-
-  window.location.href = `${baseUrl}?${params.toString()}`;
 }

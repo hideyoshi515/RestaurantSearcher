@@ -1,5 +1,5 @@
 // 最大サイズを指定
-const MAX_SIZE = 4;
+const MAX_SIZE = 20;
 const storageKey = 'shopHistory'; // ストレージキーを指定
 
 // サイズ制限があるListクラスを定義

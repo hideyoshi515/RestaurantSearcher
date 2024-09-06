@@ -24,6 +24,4 @@ function switchTab(event, tabName) {
 }
 
 // ページの読み込み時に最初のタブをアクティブにする
-document.addEventListener("DOMContentLoaded", function () {
-  document.getElementsByClassName("tab")[0].click();
-});
+document.getElementsByClassName("tab")[0].click();
