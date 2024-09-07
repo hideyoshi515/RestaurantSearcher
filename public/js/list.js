@@ -53,7 +53,7 @@ function addItemToList(item) {
 function saveListToLocalStorage() {
     // 既存のデータを取得
     const existingData = localStorage.getItem(storageKey);
-    
+
     // 既存のデータを配列に変換
     let existingList = [];
     if (existingData) {
@@ -62,7 +62,7 @@ function saveListToLocalStorage() {
 
     // 現在のリストのデータを取得
     const newData = myList.getList();
-    
+
     // 現在のリストのデータを追加
     newData.forEach(item => {
         if (!existingList.includes(item)) {
@@ -74,7 +74,7 @@ function saveListToLocalStorage() {
     });
 
     // 更新されたリストをJSON文字列に変換してlocalStorageに保存
-    localStorage.setItem(storageKey, JSON.stringify(existingList)); 
+    localStorage.setItem(storageKey, JSON.stringify(existingList));
 }
 
 // localStorageからリストをロードする関数
@@ -92,6 +92,6 @@ function loadListFromLocalStorage() {
 }
 
 // ページが読み込まれたときにリストをロードする
-window.onload = function() {
+window.onload = function () {
     loadListFromLocalStorage();  // ページローディング時にデータをロード
 };

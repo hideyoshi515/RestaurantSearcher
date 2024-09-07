@@ -31,7 +31,7 @@
     </div>
   </div>
   <div class="container">
-    <div class="innerDiv" style="padding: 0 !important;">
+    <div class="innerDiv pZero">
       <div class="tab-container">
         <div class="tabs">
           <button class="tab" onclick="switchTab(event, 'Tab1')">
@@ -45,13 +45,12 @@
         <div id="Tab1" class="tab-content">
           <div name="searchForm">
             <a href="#" onclick="getLocation()">
-              <div style="display: flex; justify-content: center;">
-                <img src="img/map.png" style="width: 50%;" />
+              <div class="map-img-container">
+                <img src="img/map.png" class="map-img" />
               </div>
             </a>
-            <div class="select" style="display: flex; justify-content: center; gap: 1vw;">
-              <input class="rangeInput" type="range" id="rangeSlider" name="rangeSlider" min="1" max="5" value="3"
-                style="width: 82.5%;" />
+            <div class="select">
+              <input class="rangeInput" type="range" id="rangeSlider" name="rangeSlider" min="1" max="5" value="3" />
             </div>
             <div class="radio-group">
               <input type="radio" name="range" value="1" id="radio1" />
@@ -77,7 +76,7 @@
         <div id="Tab2" class="tab-content">
           <form name="searchLocate" action="result.html" method="GET">
             <div>
-              <div style="display: none;">
+              <div class="displayNone">
                 <label for="largeSelect">大サービスエリア:</label>
                 <select id="largeSelect">
                   <option value="">選択してください</option>
@@ -96,7 +95,7 @@
                   エリア検索
                 </button>
               </div>
-              <div id="jp_map" style="transform: scale(1.09); overflow: hidden;">
+              <div class="jp_map" id="jp_map">
                 <ul class="hokkaido" aria-label="北海道">
                   <li class="hokkaido">
                     <a href="#areaDiv" onclick="selectMap('Z041','middleArea','hokkaido'); return false;">

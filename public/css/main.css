@@ -52,6 +52,10 @@ body {
   max-width: 1200px;
 }
 
+.pZero {
+  padding: 0 !important;
+}
+
 .container>.innerDiv {
   flex: 1 1 100%;
   background-color: #fff;
@@ -62,7 +66,22 @@ body {
   /* 角を丸くする */
 }
 
+.map-img-container {
+  display: flex;
+  justify-content: center;
+}
+
+.map-img {
+  width: 50%;
+}
+
+.jp_map {
+  transform: scale(1.09);
+  overflow: hidden;
+}
+
 .rangeInput {
+  width: 70%;
   accent-color: #34c759;
   /* range入力のアクセントカラー */
 }
@@ -238,6 +257,7 @@ h1 {
   align-items: center;
 }
 
+.displayNone,
 .radio-group input[type="radio"] {
   display: none;
 }
@@ -312,6 +332,12 @@ h1 {
   text-wrap: nowrap;
   text-overflow: ellipsis;
   padding: 2.5px 0px 2.5px 5px;
+}
+
+.select {
+  display: flex;
+  justify-content: center;
+  gap: 1vw;
 }
 
 .select-button {

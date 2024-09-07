@@ -101,7 +101,7 @@ function loadAreasToBtn(areaCode, divId, areaStyle, size) {
   // ボタンを含むdivを作成
   const createButtonDiv = () => {
     const buttonDiv = document.createElement("div");
-    buttonDiv.classList.add("button-container"); 
+    buttonDiv.classList.add("button-container");
     return buttonDiv;
   };
 
@@ -120,11 +120,11 @@ function loadAreasToBtn(areaCode, divId, areaStyle, size) {
     selectBtn.textContent = name;
     selectBtn.classList.add("select-button");
     if (size === "middle") {
-      selectBtn.onclick = function() {
+      selectBtn.onclick = function () {
         selectMap(code, 'smallArea', areaStyle);  // 中エリア選択時の処理
       };
     } else if (size === "small") {
-      selectBtn.onclick = function() {
+      selectBtn.onclick = function () {
         window.location.href = `result.html?small_area=${code}&count=100`;  // 小エリア選択時の処理
       };
     }

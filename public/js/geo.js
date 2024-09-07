@@ -14,6 +14,7 @@ function showPosition(position) {
   let test = false;
 
   if (test) {
+    //テスト用東京都庁座標
     latitude = "35.689501375244";
     longitude = "139.69173371705";
   }
@@ -31,8 +32,8 @@ function showPosition(position) {
       ).value = `${postcode}, ${city}, ${neighbourhood}`;
     })
     .catch(error => console.error('位置データを取得中にエラーが発生しました:', error)) // エラーハンドリング追加
-    .finally(() => { 
-      dataLoading.style.display = "none"; 
+    .finally(() => {
+      dataLoading.style.display = "none";
       getLocationBtn.disabled = false;
     });
 }

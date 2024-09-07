@@ -12,7 +12,7 @@ function generateApiUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   let url = new URL(apiUrl);
   url.searchParams.append("count", "100");
-  
+
   // 各エリア情報をパラメータに追加
   appendParamsToUrl(url, {
     range: urlParams.get("range"),
@@ -122,7 +122,7 @@ function extractShopData(shop) {
 }
 
 // 店舗データを生成して表示する関数
-function createShopElement(shop,recent) {
+function createShopElement(shop, recent) {
   let shopid, name, access, logoImage, address, open;
 
   if (recent) {
@@ -183,7 +183,7 @@ function displayPage(page) {
   shopListContainer.innerHTML = ""; // 以前の項目をクリア
 
   for (let i = currentIndex; i < currentIndex + initialLoadCount && i < endIndex; i++) {
-    const shopElement = createShopElement(shops[i],false);
+    const shopElement = createShopElement(shops[i], false);
     shopListContainer.appendChild(shopElement);
   }
 
@@ -211,7 +211,7 @@ function setupScrollLoad(endIndex) {
 function loadMoreShops(endIndex) {
   const shopListContainer = document.querySelector(".shopList");
   if (currentIndex < endIndex && currentIndex - (currentPage - 1) * itemsPerPage < maxLoadCount) {
-    const shopElement = createShopElement(shops[currentIndex],false);
+    const shopElement = createShopElement(shops[currentIndex], false);
     shopListContainer.appendChild(shopElement);
     currentIndex += shopIncrement; // 1件ずつ追加ロード
   } else {
