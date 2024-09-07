@@ -3,7 +3,7 @@ const itemsPerPage = 10; // 1ページに表示する最大の件数
 let totalItems = 0; // 全店舗の総数
 let shops = []; // 店舗データを格納する配列
 let currentIndex = 0; // 現在ロードされた店舗のインデックス
-const initialLoadCount = 3; // 初回に表示する店舗の件数（3件）
+const initialLoadCount = 6; // 初回に表示する店舗の件数（6件）
 const maxLoadCount = 10; // スクロールで追加できる最大件数（10件まで）
 const shopIncrement = 1; // スクロール時に追加ロードする店舗の件数（1件）
 
@@ -118,7 +118,7 @@ function handleXMLData(xmlDoc) {
   const shopElements = xmlDoc.getElementsByTagName("shop");
   totalItems = shopElements.length;
   shops = Array.from(shopElements);
-  displayPage(currentPage); // ページごとに最初に表示する
+  displayPage(currentPage); // ページごとに最初に表示
 }
 
 // 店舗データを抽出する関数
@@ -189,7 +189,7 @@ function createShopElement(shop) {
 
   const shopAccess = document.createElement("p");
   shopAccess.classList.add("shop-access");
-  shopAccess.innerHTML = formatAccessInfo(access);
+  shopAccess.innerHTML = access;
   shopContentDiv.appendChild(shopAccess);
 
   const shopTime = document.createElement("p");
@@ -235,7 +235,6 @@ function setupScrollLoad(endIndex) {
 // 追加で店舗をロードする関数
 function loadMoreShops(endIndex) {
   const shopListContainer = document.querySelector(".shopList");
-
   if (currentIndex < endIndex && currentIndex - (currentPage - 1) * itemsPerPage < maxLoadCount) {
     const shopElement = createShopElement(shops[currentIndex]);
     shopListContainer.appendChild(shopElement);

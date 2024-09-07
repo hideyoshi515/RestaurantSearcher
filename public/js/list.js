@@ -77,7 +77,6 @@ function saveListToLocalStorage() {
     localStorage.setItem(storageKey, JSON.stringify(existingList)); 
 }
 
-
 // localStorageからリストをロードする関数
 function loadListFromLocalStorage() {
     const data = localStorage.getItem(storageKey);

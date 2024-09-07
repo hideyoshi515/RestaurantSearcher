@@ -1,7 +1,7 @@
 // 位置情報を取得して指定されたパラメータを含むURLにリダイレクト
 function showPosition(position) {
   let { latitude, longitude } = position.coords; // 位置情報オブジェクトから値を抽出
-  let test = true;
+  let test = false;
 
   if (test) {
     latitude = "35.689501375244";
@@ -10,8 +10,8 @@ function showPosition(position) {
 
   const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=ja`;
 
-  fetch(url) // XMLHttpRequestの代わりにfetch APIを使用して最適化
-    .then(response => response.json()) // JSONレスポンスを解析
+  fetch(url)
+    .then(response => response.json()) // JSONレスポンス解析
     .then(data => {
       const { address } = data;
       const name = data.name || "none";
@@ -24,14 +24,14 @@ function showPosition(position) {
     .catch(error => console.error('Error fetching location data:', error)); // エラーハンドリング追加
 }
 
-// ユーザーの位置情報を取得するためにGeolocation APIを呼び出し
+// ユーザーの位置情報取得のためGeolocation API呼び出し
 function getLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(showPosition, showError);
   }
 }
 
-// 位置情報の取得に失敗した場合にエラーメッセージを表示
+// 位置情報取得に失敗した場合エラーメッセージ表示
 function showError(error) {
   const errorMessage = {
     1: '位置情報が許可されていません。',
@@ -41,11 +41,12 @@ function showError(error) {
   alert(errorMessage[error.code] || '未知のエラーが発生しました。');
 }
 
+// スライダーとラジオボタンの同期処理
 const rangeSlider = document.getElementById("rangeSlider");
 const radioButtons = document.querySelectorAll('input[name="range"]');
 
 if (rangeSlider != null) {
-  // ラジオボタンが選択されたときにスライダーを同期する関数
+  // ラジオボタン選択時スライダー同期関数
   function syncRangeSlider() {
     const checkedRadio = document.querySelector('input[name="range"]:checked');
     if (checkedRadio) {
@@ -53,12 +54,12 @@ if (rangeSlider != null) {
     }
   }
 
-  // ラジオボタンの値が変更されたときにスライダーを同期
+  // ラジオボタン値変更時スライダー同期
   radioButtons.forEach((radio) => {
     radio.addEventListener("change", syncRangeSlider);
   });
 
-  // スライダーの値が変更されたときにラジオボタンを同期する関数
+  // スライダー値変更時ラジオボタン同期関数
   function syncRadioButtons() {
     const value = rangeSlider.value;
     radioButtons.forEach((radio) => {
@@ -66,23 +67,24 @@ if (rangeSlider != null) {
     });
   }
 
-  // スライダーの値が変更されたときにラジオボタンを同期
+  // スライダー値変更時ラジオボタン同期
   rangeSlider.addEventListener("input", syncRadioButtons);
 
-  // 初期ロード時に同期する
+  // 初期ロード時同期
   syncRangeSlider();
   syncRadioButtons();
 }
 
+// `index.html`ページで履歴を表示する処理
 if (location.href.indexOf("index.html") > 0) {
   const historiesDiv = document.getElementById("historyDiv");
   const shopHistory = loadListFromLocalStorage("shopHistory");
   shopHistory.getList().forEach((element) => {
-    const [areaName, areaCode, searchRange] = element.split(":"); // 構造分解を使用して可読性を向上
+    const [areaName, areaCode, searchRange] = element.split(":"); // 構造分解使用
 
     const searchLink = document.createElement("a");
-    searchLink.style.textDecoration = "none"; // テキストの装飾を削除
-    searchLink.style.color = "inherit"; // テキストカラーを継承
+    searchLink.style.textDecoration = "none"; // テキスト装飾削除
+    searchLink.style.color = "inherit"; // テキストカラー継承
 
     const historyDiv = document.createElement("div");
     historyDiv.classList.add("shopHistories");
@@ -99,7 +101,7 @@ if (location.href.indexOf("index.html") > 0) {
         4: "2,000m",
         5: "3,000m",
       };
-      const range = rangeMapping[searchRange] || "1,000m"; // 範囲マッピングを最適化
+      const range = rangeMapping[searchRange] || "1,000m"; // 範囲マッピング最適化
       console.log(`${areaName} ${range}以内`);
       historyDiv.innerHTML = `${areaName} ${range}以内`;
     }

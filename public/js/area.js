@@ -1,4 +1,5 @@
 const codes = [
+  // 日本の都道府県コード
   "Z041", // 北海道
   "Z051", // 青森
   "Z054", // 秋田
@@ -50,18 +51,19 @@ const codes = [
 
 // キャッシュ
 const cache = {
-  largeAreas: {},
-  middleAreas: {},
-  smallAreas: {},
+  largeAreas: {},  // 大エリアのキャッシュ
+  middleAreas: {}, // 中エリアのキャッシュ
+  smallAreas: {},  // 小エリアのキャッシュ
 };
 
 // データロード
 function loadData(url, parser, key) {
+  // データを取得してXML形式にパースする
   return fetch(proxyUrl + encodeURIComponent(url))
-    .then((response) => response.text())
-    .then((str) => new window.DOMParser().parseFromString(str, "text/xml"))
+    .then((response) => response.text())  // レスポンスをテキストとして取得
+    .then((str) => new window.DOMParser().parseFromString(str, "text/xml")) // XML形式に変換
     .then((data) => {
-      const areas = data.getElementsByTagName(key);
+      const areas = data.getElementsByTagName(key);  // 指定されたキーでデータを取得
       const result = {};
       for (let i = 0; i < areas.length; i++) {
         const code = areas[i].getElementsByTagName("code")[0].textContent;
@@ -70,9 +72,10 @@ function loadData(url, parser, key) {
       }
       return result;
     })
-    .catch((error) => console.error(`Error fetching ${key}:`, error));
+    .catch((error) => console.error(`Error fetching ${key}:`, error));  // エラーハンドリング
 }
 
+// マップを選択する処理
 function selectMap(code, areaSize, areaStyle) {
   if (areaSize === "middleArea") {
     loadAreasToBtn(code, "areaDiv", areaStyle, "middle");
@@ -85,15 +88,17 @@ function selectMap(code, areaSize, areaStyle) {
     areaDiv.scrollIntoView({
       behavior: "smooth",
       block: "end",
-    });
+    });  // スムーズにスクロール
   }
 }
 
+// エリアボタンをロードして表示
 function loadAreasToBtn(areaCode, divId, areaStyle, size) {
   const div = document.getElementById(divId);
   div.style.display = "flex";
-  div.innerHTML = "";
+  div.innerHTML = "";  // 既存の内容をクリア
 
+  // ボタンを含むdivを作成
   const createButtonDiv = () => {
     const buttonDiv = document.createElement("div");
     buttonDiv.style.display = "flex";
@@ -102,6 +107,7 @@ function loadAreasToBtn(areaCode, divId, areaStyle, size) {
     return buttonDiv;
   };
 
+  // 透明なdivを作成
   const createTransparentDiv = () => {
     const transparentDiv = document.createElement("div");
     transparentDiv.classList.add("transparentDiv");
@@ -120,11 +126,11 @@ function loadAreasToBtn(areaCode, divId, areaStyle, size) {
     selectBtn.style.flex = "1";
     if (size === "middle") {
       selectBtn.onclick = function() {
-        selectMap(code, 'smallArea', areaStyle);
+        selectMap(code, 'smallArea', areaStyle);  // 中エリア選択時の処理
       };
     } else if (size === "small") {
       selectBtn.onclick = function() {
-        window.location.href = `result.html?small_area=${code}&count=100`;
+        window.location.href = `result.html?small_area=${code}&count=100`;  // 小エリア選択時の処理
       };
     }
     currentDiv.appendChild(selectBtn);
@@ -165,99 +171,96 @@ function loadAreasToBtn(areaCode, divId, areaStyle, size) {
   }
 }
 
-  const largeSelect = document.getElementById("largeSelect");
-  const middleSelect = document.getElementById("middleSelect");
-  const smallSelect = document.getElementById("smallSelect");
+// 大エリアロード
+function loadLargeAreas() {
+  initialize();  // 初期化処理
+  return loadData(largeAreaUrl, "text/xml", "large_area").then((data) => {
+    cache.largeAreas = data;
+    for (const [code, name] of Object.entries(data)) {
+      const option = document.createElement("option");
+      option.value = code;
+      option.textContent = name;
+      largeSelect.appendChild(option);
+    }
+  });
+}
 
-  // 大エリアロード
-  function loadLargeAreas() {
-    initialize();
-    return loadData(largeAreaUrl, "text/xml", "large_area").then((data) => {
-      cache.largeAreas = data;
-      for (const [code, name] of Object.entries(data)) {
-        const option = document.createElement("option");
-        option.value = code;
-        option.textContent = name;
-        largeSelect.appendChild(option);
+// 中エリアロード
+function loadMiddleAreas(largeAreaCode) {
+  if (cache.middleAreas[largeAreaCode]) {
+    populateMiddleSelect(cache.middleAreas[largeAreaCode]);
+  } else {
+    loadData(middleAreaUrl + largeAreaCode, "text/xml", "middle_area").then(
+      (data) => {
+        cache.middleAreas[largeAreaCode] = data;
+        populateMiddleSelect(data);
       }
-    });
+    );
   }
+}
 
-  // 中エリアロード
-  function loadMiddleAreas(largeAreaCode) {
-    if (cache.middleAreas[largeAreaCode]) {
-      populateMiddleSelect(cache.middleAreas[largeAreaCode]);
-    } else {
-      loadData(middleAreaUrl + largeAreaCode, "text/xml", "middle_area").then(
-        (data) => {
-          cache.middleAreas[largeAreaCode] = data;
-          populateMiddleSelect(data);
-        }
-      );
-    }
+// 小エリアロード
+function loadSmallAreas(middleAreaCode) {
+  if (cache.smallAreas[middleAreaCode]) {
+    populateSmallSelect(cache.smallAreas[middleAreaCode]);
+  } else {
+    loadData(smallAreaUrl + middleAreaCode, "text/xml", "small_area").then(
+      (data) => {
+        cache.smallAreas[middleAreaCode] = data;
+        populateSmallSelect(data);
+      }
+    );
   }
+}
 
-  // 小エリアロード
-  function loadSmallAreas(middleAreaCode) {
-    if (cache.smallAreas[middleAreaCode]) {
-      populateSmallSelect(cache.smallAreas[middleAreaCode]);
-    } else {
-      loadData(smallAreaUrl + middleAreaCode, "text/xml", "small_area").then(
-        (data) => {
-          cache.smallAreas[middleAreaCode] = data;
-          populateSmallSelect(data);
-        }
-      );
-    }
+// 中エリアセレクトのポピュレート
+function populateMiddleSelect(areas) {
+  for (const [code, name] of Object.entries(areas)) {
+    const option = document.createElement("option");
+    option.value = code;
+    option.textContent = name;
+    loadSmallAreas(code);  // 中エリアのロード後、小エリアをロード
+    middleSelect.appendChild(option);
   }
+}
 
-  // 中エリア更新
-  function populateMiddleSelect(areas) {
-    for (const [code, name] of Object.entries(areas)) {
-      const option = document.createElement("option");
-      option.value = code;
-      option.textContent = name;
-      loadSmallAreas(code)
-      middleSelect.appendChild(option);
-    }
+// 小エリアセレクトのポピュレート
+function populateSmallSelect(areas) {
+  for (const [code, name] of Object.entries(areas)) {
+    const option = document.createElement("option");
+    option.value = code;
+    option.textContent = name;
+    smallSelect.appendChild(option);
   }
+}
 
-  // 小エリア更新
-  function populateSmallSelect(areas) {
-    for (const [code, name] of Object.entries(areas)) {
-      const option = document.createElement("option");
-      option.value = code;
-      option.textContent = name;
-      smallSelect.appendChild(option);
-    }
+if (window.location.pathname.endsWith("index.html")) {
+  // 大エリア選択時のイベントリスナー
+  largeSelect.addEventListener("change", () => {
+    middleSelect.innerHTML = '<option value="">選択してください</option>';
+    smallSelect.innerHTML = '<option value="">選択してください</option>';
+    const largeAreaCode = largeSelect.value;
+    middleSelect.disabled = false;
+    smallSelect.disabled = true;
+    loadMiddleAreas(largeAreaCode);
+  });
+
+  // 中エリア選択時のイベントリスナー
+  middleSelect.addEventListener("change", () => {
+    smallSelect.innerHTML = '<option value="">選択してください</option>';
+    const middleAreaCode = middleSelect.value;
+    smallSelect.disabled = false;
+    loadSmallAreas(middleAreaCode);
+  });
+
+  loadLargeAreas();  // ページロード時に大エリアをロード
+}
+
+// 中エリア初期時読み込み
+function initialize() {
+  for (const code of codes) {
+    loadMiddleAreas(code);  // すべての大エリアコードに対して中エリアをロード
   }
-
-  if (window.location.pathname.endsWith("index.html")) {
-    largeSelect.addEventListener("change", () => {
-      middleSelect.innerHTML = '<option value="">選択してください</option>';
-      smallSelect.innerHTML = '<option value="">選択してください</option>';
-      const largeAreaCode = largeSelect.value;
-      middleSelect.disabled = false;
-      smallSelect.disabled = true;
-      loadMiddleAreas(largeAreaCode);
-    });
-
-    middleSelect.addEventListener("change", () => {
-      smallSelect.innerHTML = '<option value="">選択してください</option>';
-      const middleAreaCode = middleSelect.value;
-      smallSelect.disabled = false;
-      loadSmallAreas(middleAreaCode);
-    });
-
-    loadLargeAreas();
-  }
-
-  // 中エリア初期時読み込み
-  function initialize() {
-    for (const code of codes) {
-      loadMiddleAreas(code);
-    }
-    loadMiddleAreas("");
-    console.log("initialize");
-  }
-
+  loadMiddleAreas("");  // 初期表示
+  console.log("initialize");
+}

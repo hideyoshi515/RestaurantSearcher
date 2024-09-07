@@ -9,7 +9,10 @@ function openModal(shopid) {
   <div style="display:flex;justify-content: center;">
   <img src="img/loading.gif" style="padding: 10vh 0; width: 50%;">
   </div>`;
-  modal.style.display = "block"; // モーダルを表示
+  
+  // モーダルを表示し、スクロール無効化
+  modal.style.display = "block"; 
+  document.body.style.overflow = "hidden"; // スクロール無効
 
   const url = `${apiUrl}&id=${shopid}`;
   fetch(proxyUrl + encodeURIComponent(url))
@@ -17,14 +20,14 @@ function openModal(shopid) {
     .then((data) => parseModalXML(data))
     .catch((error) => console.error("Error:", error))
     .finally(() => {
-      loading.style.display = "none";
+      loading.style.display = "none"; // ローディング表示非表示
     }); 
 }
 
 function parseModalXML(xmlString) {
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(xmlString, "application/xml");
-  handleModalData(xmlDoc);
+  handleModalData(xmlDoc); // XMLデータ処理
 }
 
 function handleModalData(shop) {
@@ -45,14 +48,15 @@ function handleModalData(shop) {
     ? "カード払い利用不可"
     : "カード払い利用可";
 
+  // モーダルの本文更新
   modalBody.innerHTML = `
   <div>
     <div>
-        <img class="shop-image" src="${logoImage}" alt="${name}"">
-        <p class="shop-name">${name}</p>
-        <p class="shop-access"> ${address}</p>
-        <p class="shop-access"> ${access}</p>
-        <p class="shop-time"> ${open}</p>
+        <img class="shop-image" src="${logoImage}" alt="${name}">
+        <p class="shop-name" style="white-space: wrap">${name}</p>
+        <p class="shop-access" style="white-space: wrap"> ${address}</p>
+        <p class="shop-access" style="white-space: wrap"> ${access}</p>
+        <p class="shop-time" style="white-space: wrap"> ${open}</p>
     </div>
     <div>
         <p class="shop-tag"> #${private_room} #${cardCan}</p>
@@ -61,9 +65,10 @@ function handleModalData(shop) {
 `;
 }
 
-// モーダル外をクリックした時にモーダルを閉じる処理
+// モーダル外クリックでモーダル閉じる
 window.onclick = function (event) {
   if (event.target == modal) {
-    modal.style.display = "none"; // モーダルを非表示にする
+    modal.style.display = "none"; // モーダル非表示
+    document.body.style.overflow = "auto"; // スクロール再有効
   }
 };
