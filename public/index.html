@@ -76,25 +76,6 @@
         <div id="Tab2" class="tab-content">
           <form name="searchLocate" action="result.html" method="GET">
             <div>
-              <div class="displayNone">
-                <label for="largeSelect">大サービスエリア:</label>
-                <select id="largeSelect">
-                  <option value="">選択してください</option>
-                </select>
-
-                <label for="middleSelect">中エリア:</label>
-                <select id="middleSelect" disabled>
-                  <option value="">選択してください</option>
-                </select>
-
-                <label for="smallSelect">小エリア:</label>
-                <select id="smallSelect" disabled>
-                  <option value="">選択してください</option>
-                </select>
-                <button type="button" onclick="searchAreaCode()">
-                  エリア検索
-                </button>
-              </div>
               <div class="jp_map" id="jp_map">
                 <ul class="hokkaido" aria-label="北海道">
                   <li class="hokkaido">
@@ -356,11 +337,12 @@
         </div>
       </div>
 
-      <div class="historyTable">
-        <span class="historyList">最近見た一覧</span>
+      <div class="historyTable" id="historyMsg"></div>
+      <div class="historyTable" id="historyTable">
         <div class="historyTable" id="historyDiv"></div>
         <!--最近訪問した２０件-->
       </div>
+      <div class="historyTable" id="historyEnd"></div>
     </div>
   </div>
 </body>

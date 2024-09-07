@@ -107,6 +107,13 @@ function loadRecentHistory() {
 
   recentHistory = shopHistory.getList(); // 保存された最近の履歴を取得
   historyIndex = 0; // インデックスを初期化
+  if (recentHistory.length > 0) {
+    const historyTable = document.getElementById("historyMsg");
+    const historyMessage = document.createElement("span");
+    historyMessage.classList.add("historyList");
+    historyMessage.innerHTML = "最近見た一覧";
+    historyTable.appendChild(historyMessage);
+  }
 
   // 初めに表示する履歴をロード
   displayRecentHistory();
@@ -131,7 +138,9 @@ function displayRecentHistory() {
     const message = document.createElement("span");
     message.textContent = `最大 ${maxHistoryLoadCount}件まで表示されています`;
     message.classList.add("info-message");
-    historiesDiv.appendChild(message);
+    if (recentHistory.length > 0) {
+      document.getElementById('historyEnd').appendChild(message);
+    }
   }
 }
 

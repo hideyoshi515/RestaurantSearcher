@@ -171,24 +171,18 @@ function loadLargeAreas() {
   initialize();  // 初期化処理
   return loadData(largeAreaUrl, "text/xml", "large_area").then((data) => {
     cache.largeAreas = data;
-    for (const [code, name] of Object.entries(data)) {
-      const option = document.createElement("option");
-      option.value = code;
-      option.textContent = name;
-      largeSelect.appendChild(option);
-    }
   });
 }
 
 // 中エリアロード
 function loadMiddleAreas(largeAreaCode) {
   if (cache.middleAreas[largeAreaCode]) {
-    populateMiddleSelect(cache.middleAreas[largeAreaCode]);
+    cacheMiddleSelect(cache.middleAreas[largeAreaCode]);
   } else {
     loadData(middleAreaUrl + largeAreaCode, "text/xml", "middle_area").then(
       (data) => {
         cache.middleAreas[largeAreaCode] = data;
-        populateMiddleSelect(data);
+        cacheMiddleSelect(data);
       }
     );
   }
@@ -197,57 +191,23 @@ function loadMiddleAreas(largeAreaCode) {
 // 小エリアロード
 function loadSmallAreas(middleAreaCode) {
   if (cache.smallAreas[middleAreaCode]) {
-    populateSmallSelect(cache.smallAreas[middleAreaCode]);
   } else {
     loadData(smallAreaUrl + middleAreaCode, "text/xml", "small_area").then(
       (data) => {
         cache.smallAreas[middleAreaCode] = data;
-        populateSmallSelect(data);
       }
     );
   }
 }
 
 // 中エリアセレクトのポピュレート
-function populateMiddleSelect(areas) {
+function cacheMiddleSelect(areas) {
   for (const [code, name] of Object.entries(areas)) {
-    const option = document.createElement("option");
-    option.value = code;
-    option.textContent = name;
     loadSmallAreas(code);  // 中エリアのロード後、小エリアをロード
-    middleSelect.appendChild(option);
-  }
-}
-
-// 小エリアセレクトのポピュレート
-function populateSmallSelect(areas) {
-  for (const [code, name] of Object.entries(areas)) {
-    const option = document.createElement("option");
-    option.value = code;
-    option.textContent = name;
-    smallSelect.appendChild(option);
   }
 }
 
 if (window.location.pathname.endsWith("index.html")) {
-  // 大エリア選択時のイベントリスナー
-  largeSelect.addEventListener("change", () => {
-    middleSelect.innerHTML = '<option value="">選択してください</option>';
-    smallSelect.innerHTML = '<option value="">選択してください</option>';
-    const largeAreaCode = largeSelect.value;
-    middleSelect.disabled = false;
-    smallSelect.disabled = true;
-    loadMiddleAreas(largeAreaCode);
-  });
-
-  // 中エリア選択時のイベントリスナー
-  middleSelect.addEventListener("change", () => {
-    smallSelect.innerHTML = '<option value="">選択してください</option>';
-    const middleAreaCode = middleSelect.value;
-    smallSelect.disabled = false;
-    loadSmallAreas(middleAreaCode);
-  });
-
   loadLargeAreas();  // ページロード時に大エリアをロード
 }
 
