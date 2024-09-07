@@ -21,6 +21,9 @@ function switchTab(event, tabName) {
   const activeTab = event.currentTarget;
   slider.style.width = activeTab.offsetWidth + "px";
   slider.style.left = activeTab.offsetLeft + "px";
+
+  const areaDiv = document.getElementById("areaDiv");
+  areaDiv.style.display = "none";
 }
 
 // ページの読み込み時に最初のタブをアクティブにする

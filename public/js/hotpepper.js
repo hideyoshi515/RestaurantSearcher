@@ -68,8 +68,6 @@ function fetchLocationInfo(lat, lng, range) {
       let rangeText = getRangeText(range);
 
       document.getElementById("areaName").innerHTML = `〒${address.postcode} ${neighbourhood}から${rangeText}以内`;
-      addItemToList(`${neighbourhood}:lat=${lat}&lon=${lng}:${range}`);
-      saveListToLocalStorage("shopHistory");
     })
     .catch(handleError)
     .finally(hideDataLoading);
@@ -101,8 +99,6 @@ function parseXMLName(xmlString) {
   const name = xmlDoc.getElementsByTagName("name")[0].textContent;
   const small_area_code = xmlDoc.getElementsByTagName("code")[0].textContent;
   document.getElementById("areaName").innerHTML = name;
-  addItemToList(`${name}:${small_area_code}:6`);
-  saveListToLocalStorage("shopHistory");
 }
 
 // XMLデータの処理
@@ -126,8 +122,17 @@ function extractShopData(shop) {
 }
 
 // 店舗データを生成して表示する関数
-function createShopElement(shop) {
-  const { shopid, name, access, logoImage, open } = extractShopData(shop);
+function createShopElement(shop,recent) {
+  let shopid, name, access, logoImage, address, open;
+
+  if (recent) {
+    // recentがtrueの場合、文字列を分割してデータを抽出
+    [shopid, name, access, logoImage, address, open] = shop.split("§");
+  } else {
+    // recentがfalseの場合、XMLデータから抽出
+    const shopData = extractShopData(shop);
+    ({ shopid, name, access, logoImage, address, open } = shopData);
+  }
 
   const shopLink = document.createElement("a");
   shopLink.classList.add("shop-link");
@@ -178,7 +183,7 @@ function displayPage(page) {
   shopListContainer.innerHTML = ""; // 以前の項目をクリア
 
   for (let i = currentIndex; i < currentIndex + initialLoadCount && i < endIndex; i++) {
-    const shopElement = createShopElement(shops[i]);
+    const shopElement = createShopElement(shops[i],false);
     shopListContainer.appendChild(shopElement);
   }
 
@@ -206,7 +211,7 @@ function setupScrollLoad(endIndex) {
 function loadMoreShops(endIndex) {
   const shopListContainer = document.querySelector(".shopList");
   if (currentIndex < endIndex && currentIndex - (currentPage - 1) * itemsPerPage < maxLoadCount) {
-    const shopElement = createShopElement(shops[currentIndex]);
+    const shopElement = createShopElement(shops[currentIndex],false);
     shopListContainer.appendChild(shopElement);
     currentIndex += shopIncrement; // 1件ずつ追加ロード
   } else {

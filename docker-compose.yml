@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"  # ポートマッピング
+    volumes:
+      - .:/usr/src/app  # ソースコードの反映
+    environment:
+      - NODE_ENV=development  # 環境設定
+    restart: always  # 自動再起動

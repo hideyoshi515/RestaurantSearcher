@@ -4,7 +4,6 @@ const modalBody = document.getElementById("modalBody"); // モーダルの本文
 
 // 各リンクにクリックイベントを追加
 function openModal(shopid) {
-  const loading = document.getElementById("loading");
   modalBody.innerHTML = `
   <div style="display:flex;justify-content: center;">
   <img src="img/loading.gif" style="padding: 10vh 0; width: 50%;">
@@ -20,7 +19,6 @@ function openModal(shopid) {
     .then((data) => parseModalXML(data))
     .catch((error) => console.error("Error:", error))
     .finally(() => {
-      loading.style.display = "none"; // ローディング表示非表示
     }); 
 }
 
@@ -47,7 +45,8 @@ function handleModalData(shop) {
     .textContent.includes("不可")
     ? "カード払い利用不可"
     : "カード払い利用可";
-
+    addItemToList(`${shopid}§${name}§${access}§${logoImage}§${address}§${open}`);
+    saveListToLocalStorage("shopHistory");
   // モーダルの本文更新
   modalBody.innerHTML = `
   <div>

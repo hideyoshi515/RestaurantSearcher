@@ -95,7 +95,7 @@ function selectMap(code, areaSize, areaStyle) {
 // エリアボタンをロードして表示
 function loadAreasToBtn(areaCode, divId, areaStyle, size) {
   const div = document.getElementById(divId);
-  div.style.display = "flex";
+  div.style.display = "grid";
   div.innerHTML = "";  // 既存の内容をクリア
 
   // ボタンを含むdivを作成
@@ -257,5 +257,4 @@ function initialize() {
     loadMiddleAreas(code);  // すべての大エリアコードに対して中エリアをロード
   }
   loadMiddleAreas("");  // 初期表示
-  console.log("initialize");
 }
