@@ -516,6 +516,10 @@ h1 {
 @media (max-width: 768px) {
   /* iPhoneやGalaxyなどのスマホ用 */
 
+  .container {
+    padding: 5px;
+  }
+
   .modal-content {
     width: 90%;
   }
@@ -535,7 +539,7 @@ h1 {
 
   .historyTable,
   .tab-container {
-    max-width: 420px;
+    max-width: calc(100vw - 20px);
   }
 
   .middleBtn {
@@ -585,9 +589,9 @@ h1 {
   }
 }
 
-/* スマホ用 */
-@media (max-width: 768px) {
-  .container {
-    padding: 5px;
+@media (min-width: 768px) {
+  .jp_map {
+    transform: scale(1.03);
+    overflow: hidden;
   }
 }
