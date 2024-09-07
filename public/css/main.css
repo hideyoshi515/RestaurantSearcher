@@ -80,6 +80,18 @@ body {
   overflow: hidden;
 }
 
+.locationDesc{
+  text-align: center;
+  font-size: 12px;
+  color: #98989D;
+}
+
+.rangeText{
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+}
+
 .rangeInput {
   width: 70%;
   accent-color: #34c759;
