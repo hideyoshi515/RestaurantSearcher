@@ -55,8 +55,8 @@
               <label for="radio5">3,000m</label>
             </div>
             <label for="locationInput">現在位置: </label>
-            <input type="text" id="locationInput" value="XXXXXXXXXXX" readonly />
-            <button id="getLocationBtn" onclick="getLocation()">
+            <input class="locationInput" type="text" id="locationInput" value="XXXXXXXXXXX" readonly />
+            <button class="getLocationBtn" id="getLocationBtn" onclick="getLocation()">
               <!--権限がない場合のみ表示-->
               現在位置を取る
             </button>
@@ -297,7 +297,7 @@
               </div>
             </div>
           </form>
-          <div class="areaDiv" id="areaDiv" style="display: none; margin-top: 25px;"></div>
+          <div class="areaDiv" id="areaDiv"></div>
         </div>
       </div>
     </div>

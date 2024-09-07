@@ -101,9 +101,7 @@ function loadAreasToBtn(areaCode, divId, areaStyle, size) {
   // ボタンを含むdivを作成
   const createButtonDiv = () => {
     const buttonDiv = document.createElement("div");
-    buttonDiv.style.display = "flex";
-    buttonDiv.style.flex = "1";
-    buttonDiv.style.width = "100%";
+    buttonDiv.classList.add("button-container"); 
     return buttonDiv;
   };
 
@@ -111,7 +109,6 @@ function loadAreasToBtn(areaCode, divId, areaStyle, size) {
   const createTransparentDiv = () => {
     const transparentDiv = document.createElement("div");
     transparentDiv.classList.add("transparentDiv");
-    transparentDiv.style.flex = "1";
     return transparentDiv;
   };
 
@@ -121,9 +118,7 @@ function loadAreasToBtn(areaCode, divId, areaStyle, size) {
     selectBtn.classList.add(areaStyle);
     selectBtn.classList.add("middleBtn");
     selectBtn.textContent = name;
-    selectBtn.style.border = 0;
-    selectBtn.style.borderRadius = "1vh";
-    selectBtn.style.flex = "1";
+    selectBtn.classList.add("select-button");
     if (size === "middle") {
       selectBtn.onclick = function() {
         selectMap(code, 'smallArea', areaStyle);  // 中エリア選択時の処理

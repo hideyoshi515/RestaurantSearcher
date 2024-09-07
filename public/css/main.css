@@ -14,14 +14,17 @@ env(safe-area-inset-left)
 
 :root {
   /* 基本的な色とスタイルの定義 */
-  font-size: calc(10px + 1vmin); /* ビューポートに応じたフォントサイズ */
+  font-size: calc(10px + 1vmin);
+  /* ビューポートに応じたフォントサイズ */
   --primary: hsl(45, 80%, 60%);
   --darkGrey: #333344;
   --mediumGrey: #557777;
   --softGrey: #9a97a8;
   --softTint: rgba(0, 0, 0, 0.2);
-  --bounce: 0.3s cubic-bezier(0.3, -0.3, 0.1, 1.4); /* バウンス効果 */
-  --ease: 0.5s cubic-bezier(0.3, 0.1, 0.3, 1); /* イージング効果 */
+  --bounce: 0.3s cubic-bezier(0.3, -0.3, 0.1, 1.4);
+  /* バウンス効果 */
+  --ease: 0.5s cubic-bezier(0.3, 0.1, 0.3, 1);
+  /* イージング効果 */
   --length: 2;
 }
 
@@ -59,24 +62,31 @@ body {
   max-width: 1200px;
 }
 
-.container > .innerDiv {
+.container>.innerDiv {
   flex: 1 1 100%;
   background-color: #fff;
   padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 影をつける */
-  border-radius: 8px; /* 角を丸くする */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* 影をつける */
+  border-radius: 8px;
+  /* 角を丸くする */
 }
 
-.rangeInput{
+.rangeInput {
   accent-color: #34c759;
 }
 
-#shopTable{
+.no-linkStyle {
+  text-decoration: none;
+  color: inherit;
+}
+
+.shopTable {
   width: 100%;
   background-color: #f4f4f4;
 }
 
-.shopHistories{
+.shopHistories {
   padding: 1vh;
   margin: 1vh 0;
   border: 1px solid #000;
@@ -113,15 +123,24 @@ body {
 .shop-access {
   font-size: 14px;
   line-height: 20px;
-  display: -webkit-box; /* Flexbox レイアウトを生成 (WebKit ブラウザ対応) */
-  display: -moz-box; /* Mozilla ブラウザ対応 */
-  display: -ms-flexbox; /* IE10 以上に対応 */
-  display: box; /* 標準レイアウト方式 */
-  -webkit-line-clamp: 2; /* 2行まで表示 (WebKit ブラウザのみ対応) */
-  -webkit-box-orient: vertical; /* テキストを縦方向に配置 */
-  overflow: hidden; /* テキストが溢れる場合に隠す */
-  text-overflow: ellipsis; /* テキストが溢れる場合に省略記号を表示 */
-  word-break: break-word; /* 単語を途中で切って改行 */
+  display: -webkit-box;
+  /* Flexbox レイアウトを生成 (WebKit ブラウザ対応) */
+  display: -moz-box;
+  /* Mozilla ブラウザ対応 */
+  display: -ms-flexbox;
+  /* IE10 以上に対応 */
+  display: box;
+  /* 標準レイアウト方式 */
+  -webkit-line-clamp: 2;
+  /* 2行まで表示 (WebKit ブラウザのみ対応) */
+  -webkit-box-orient: vertical;
+  /* テキストを縦方向に配置 */
+  overflow: hidden;
+  /* テキストが溢れる場合に隠す */
+  text-overflow: ellipsis;
+  /* テキストが溢れる場合に省略記号を表示 */
+  word-break: break-word;
+  /* 単語を途中で切って改行 */
   white-space: nowrap;
 }
 
@@ -130,7 +149,8 @@ body {
   width: 45%;
   margin: 0 1vh;
   opacity: 0;
-  animation: fadeInUp 1s ease forwards; /* フェードインと上方向に移動するアニメーション */
+  animation: fadeInUp 1s ease forwards;
+  /* フェードインと上方向に移動するアニメーション */
 }
 
 .shop-link.fade-in {
@@ -141,7 +161,8 @@ body {
 .shop-image {
   width: 100%;
   height: 230px;
-  object-fit: cover; /* 画像をボックスにフィット */
+  object-fit: cover;
+  /* 画像をボックスにフィット */
 }
 
 .shop-time {
@@ -163,6 +184,7 @@ body {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
@@ -175,7 +197,7 @@ h1 {
 }
 
 /* ロケーション入力フィールド */
-#locationInput {
+.locationInput {
   width: 300px;
   padding: 10px;
   border-radius: 10px;
@@ -183,7 +205,7 @@ h1 {
 }
 
 /* ロケーションボタン */
-#getLocationBtn {
+.getLocationBtn {
   display: block;
   padding: 10px 15px;
   cursor: pointer;
@@ -208,7 +230,7 @@ h1 {
   transition: background-color 0.3s, border-color 0.3s;
 }
 
-.radio-group input[type="radio"]:checked + label {
+.radio-group input[type="radio"]:checked+label {
   font-weight: bold;
 }
 
@@ -231,6 +253,7 @@ h1 {
   border-bottom: 1px solid #ddd;
   border-right: 1px solid #ddd;
 }
+
 .shopHeaderCell {
   padding: 12px;
   flex: 1;
@@ -240,18 +263,19 @@ h1 {
 }
 
 .areaDiv {
-  display: grid;
+  display: none; 
+  margin-top: 25px;
   justify-content: center;
   flex-wrap: wrap;
   grid-template-columns: repeat(2, 1fr);
   margin: 0 1vh;
 }
 
-.transparentDiv{
+.transparentDiv {
   width: 30vw;
   margin: 1vw;
   visibility: hidden;
-  flex:1;
+  flex: 1;
 }
 
 .middleBtn {
@@ -314,14 +338,14 @@ h1 {
 }
 
 /* ページネーション */
-#pagination {
+.pagination {
   display: flex;
   justify-content: center;
   margin: 20px 0;
 }
 
-#pagination button,
-#pagination span {
+.pagination button,
+.pagination span {
   margin: 0 5px;
   height: 2.5rem;
   line-height: 2.5rem;
@@ -331,12 +355,12 @@ h1 {
   cursor: pointer;
 }
 
-#pagination button:disabled {
+.pagination button:disabled {
   background-color: #e0e0e0;
   cursor: not-allowed;
 }
 
-#pagination .current {
+.pagination .current {
   font-weight: bold;
   text-align: center;
 }
@@ -344,6 +368,26 @@ h1 {
 .pageBtn {
   width: 60px;
   height: 36px;
+}
+
+.loading-screen {
+  display: block;
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  z-index: 10;
+  background: #fff;
+}
+
+.loading-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.loading-img {
+  width: 25%;
 }
 
 .modal {
@@ -355,8 +399,8 @@ h1 {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -374,21 +418,8 @@ h1 {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.modal-content img{
+.modal-content img {
   border-radius: 5px;
-}
-
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
 }
 
 /* レスポンシブデザインのスタイル */
@@ -396,34 +427,38 @@ h1 {
   /* iPhoneやGalaxyなどのスマホ用 */
 
   .modal-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #fefefe;
-    margin: auto;
-    padding: 10px;
-    border: 1px solid #888;
-    border-radius: 1vh;
     width: 90%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 
   .shop-link {
-    display:inline;
+    display: inline;
     width: 100%;
     opacity: 0;
-    animation: fadeInUp 1s ease forwards; /* フェードインと上方向に移動するアニメーション */
+    animation: fadeInUp 1s ease forwards;
+    /* フェードインと上方向に移動するアニメーション */
   }
 
-  .transparentDiv{
+  .button-container {
+    display: flex; /* フレックスボックスレイアウトを適用 */
+    flex: 1; /* フレックス項目としての成長を設定 */
+    width: 100%; /* 幅を100%に設定 */
+  }
+
+  .select-button {
+    border: 0; /* ボーダーなし */
+    border-radius: 1vh; /* ボーダー半径を1vhに設定 */
+    flex: 1; /* フレックス項目としての成長を設定 */
+  }
+
+  .transparentDiv {
     margin: 1vw;
     visibility: hidden;
-    flex:1;
+    flex: 1;
   }
 
   .areaDiv {
-    display: grid;
+    display: none; 
+    margin-top: 25px;
     justify-content: center;
     flex-wrap: wrap;
     grid-template-columns: repeat(2, 1fr);
@@ -443,8 +478,8 @@ h1 {
     padding: 2.5px 0px 2.5px 5px;
   }
 
-  #pagination button,
-  #pagination span {
+  .pagination button,
+  .pagination span {
     margin: 0 1px;
     padding: 2.5px 10px;
     border: 1px solid #ddd;
@@ -456,13 +491,15 @@ h1 {
 /* FHD用 */
 @media (min-width: 1920px) {
   .container {
-    max-width: 1600px; /* 4K以上の解像度 */
+    max-width: 1600px;
+    /* 4K以上の解像度 */
   }
 }
 
 @media (max-width: 2340px) and (min-width: 1080px) {
   .container {
-    padding: 15px; /* FHDからUHDまでのデバイス */
+    padding: 15px;
+    /* FHDからUHDまでのデバイス */
   }
 }
 

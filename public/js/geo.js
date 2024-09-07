@@ -83,8 +83,7 @@ if (location.href.indexOf("index.html") > 0) {
     const [areaName, areaCode, searchRange] = element.split(":"); // 構造分解使用
 
     const searchLink = document.createElement("a");
-    searchLink.style.textDecoration = "none"; // テキスト装飾削除
-    searchLink.style.color = "inherit"; // テキストカラー継承
+    searchLink.classList.add("no-linkStyle");
 
     const historyDiv = document.createElement("div");
     historyDiv.classList.add("shopHistories");

@@ -14,39 +14,35 @@ function generateApiUrl() {
   url.searchParams.append("count", "100");
   
   // 各エリア情報をパラメータに追加
-  ["range", "lat", "lng", "lon", "large_area", "middle_area", "small_area"].forEach(param => {
-    if (urlParams.has(param)) {
-      url.searchParams.append(param, urlParams.get(param));
-    }
+  appendParamsToUrl(url, {
+    range: urlParams.get("range"),
+    lat: urlParams.get("lat"),
+    lng: urlParams.get("lng") || urlParams.get("lon"),
+    lon: urlParams.get("lon"),
+    large_area: urlParams.get("large_area"),
+    middle_area: urlParams.get("middle_area"),
+    small_area: urlParams.get("small_area")
   });
-  if (urlParams.has("lon")) {
-    url.searchParams.append("lng", urlParams.get("lon"));
-  }
+
   return url;
 }
 
 // APIに接続して結果を取得する関数
 function getResult() {
   const url = generateApiUrl();
-  
-  const dataLoading = document.getElementById("dataLoading");
-  
   fetch(proxyUrl + encodeURIComponent(url))
     .then((response) => response.text())
     .then((data) => parseXML(data))
-    .catch((error) => console.error("Error:", error))
-    .finally(() => {
-      dataLoading.style.display = "none";
-    });
+    .catch(handleError);
 
   const urlParams = new URLSearchParams(window.location.search);
-  
+
   // エリア名をAPIから取得
   if (urlParams.has("small_area")) {
     fetchAreaName(urlParams.get("small_area"));
-  } else if (urlParams.has("lat") && (urlParams.has("lng")||urlParams.has("lon"))) {
-    const longtitue = urlParams.has("lng") ? urlParams.get("lng") : urlParams.get("lon");
-    fetchLocationInfo(urlParams.get("lat"), longtitue, urlParams.get("range"));
+  } else if (urlParams.has("lat") && (urlParams.has("lng") || urlParams.has("lon"))) {
+    const longitude = urlParams.get("lng") || urlParams.get("lon");
+    fetchLocationInfo(urlParams.get("lat"), longitude, urlParams.get("range"));
   }
 }
 
@@ -57,7 +53,8 @@ function fetchAreaName(smallArea) {
   fetch(proxyUrl + encodeURIComponent(areaUrl))
     .then((response) => response.text())
     .then((data) => parseXMLName(data))
-    .catch((error) => console.error("Error:", error));
+    .catch(handleError)
+    .finally(hideDataLoading);
 }
 
 // 緯度と経度を使用して位置情報を取得する関数
@@ -69,30 +66,25 @@ function fetchLocationInfo(lat, lng, range) {
       const address = data.address;
       const neighbourhood = address.neighbourhood || address.suburb;
       let rangeText = getRangeText(range);
-      
+
       document.getElementById("areaName").innerHTML = `〒${address.postcode} ${neighbourhood}から${rangeText}以内`;
       addItemToList(`${neighbourhood}:lat=${lat}&lon=${lng}:${range}`);
       saveListToLocalStorage("shopHistory");
     })
-    .catch((error) => console.error("Error:", error));
+    .catch(handleError)
+    .finally(hideDataLoading);
 }
 
 // 距離範囲のテキストを取得する関数
 function getRangeText(range) {
-  switch (range) {
-    case "1":
-      return "300m";
-    case "2":
-      return "500m";
-    case "3":
-      return "1,000m";
-    case "4":
-      return "2,000m";
-    case "5":
-      return "3,000m";
-    default:
-      return "1,000m";
-  }
+  const rangeTexts = {
+    "1": "300m",
+    "2": "500m",
+    "3": "1,000m",
+    "4": "2,000m",
+    "5": "3,000m"
+  };
+  return rangeTexts[range] || "1,000m";
 }
 
 // XMLデータを解析する関数
@@ -130,33 +122,7 @@ function extractShopData(shop) {
   const address = shop.getElementsByTagName("address")[0].textContent;
   const open = shop.getElementsByTagName("open")[0].textContent;
 
-  return {
-    shopid,
-    name,
-    access,
-    logoImage,
-    address,
-    open,
-  };
-}
-
-// アクセス情報をフォーマットする関数
-function formatAccessInfo(access) {
-  return access
-    .replace(/駅(?!から|の|徒歩|より|隣|」|出|東|西|南|北|改|前)/g, "駅<br>")
-    .replace(/<br\s*\/?>/g, "__BR__")
-    .replace(/(\s*徒歩)/g, " 徒歩")
-    .replace(/分(?!\d|徒)/g, "分<br>")
-    .replace(/。|\//g, "<br>")
-    .replace(/<br>、|<br>！/g, "<br>")
-    .replace(/♪/g, "<br>")
-    .replace(/__BR__/g, "<br>")
-    .replace(/(<br>\s*){2,}/g, "<br>");
-}
-
-// 営業時間データをフォーマットする関数
-function formatOperatingHours(open) {
-  return open.split("\n").filter((line) => line.trim() !== "").join("<br>");
+  return { shopid, name, access, logoImage, address, open };
 }
 
 // 店舗データを生成して表示する関数
@@ -164,9 +130,8 @@ function createShopElement(shop) {
   const { shopid, name, access, logoImage, open } = extractShopData(shop);
 
   const shopLink = document.createElement("a");
-  shopLink.classList.add("shop-link"); // スタイル用のクラスを追加
-  shopLink.style.textDecoration = "none"; // テキストの装飾を削除
-  shopLink.style.color = "inherit"; // テキストカラーを継承
+  shopLink.classList.add("shop-link");
+  shopLink.classList.add("no-linkStyle");
   shopLink.href = "javascript:void(0)";
   shopLink.setAttribute('onclick', `openModal('${shopid}')`);
 
@@ -194,7 +159,7 @@ function createShopElement(shop) {
 
   const shopTime = document.createElement("p");
   shopTime.classList.add("shop-time");
-  shopTime.innerHTML = formatOperatingHours(open);
+  shopTime.innerHTML = open;
   shopContentDiv.appendChild(shopTime);
 
   shopDiv.appendChild(shopContentDiv);
@@ -217,7 +182,7 @@ function displayPage(page) {
     shopListContainer.appendChild(shopElement);
   }
 
-  currentIndex += initialLoadCount; // 3件ロード後にインデックスを更新
+  currentIndex += initialLoadCount; // 6件ロード後にインデックスを更新
 
   // スクロールイベントの設定
   setupScrollLoad(endIndex);
@@ -225,11 +190,16 @@ function displayPage(page) {
 
 // スクロールで追加店舗をロードする関数
 function setupScrollLoad(endIndex) {
-  window.onscroll = function () {
+  const onScroll = () => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
       loadMoreShops(endIndex);
     }
   };
+
+  window.addEventListener("scroll", onScroll);
+
+  // 스크롤 이벤트 핸들러 해제 (필요시)
+  return () => window.removeEventListener("scroll", onScroll);
 }
 
 // 追加で店舗をロードする関数
@@ -272,6 +242,7 @@ function updatePagination() {
   const paginationDiv = document.createElement("div");
   paginationDiv.id = "pagination";
   paginationDiv.innerHTML = paginationHTML;
+  paginationDiv.classList.add("pagination");
 
   const existingPaginationDiv = document.getElementById("pagination");
   if (existingPaginationDiv) {
@@ -289,4 +260,27 @@ function changePage(page) {
     window.scrollTo(0, 0); // ページの最上部にスクロール
     displayPage(currentPage); // ページ表示
   }
+}
+
+// エラー処理関数
+function handleError(error) {
+  console.error("Error:", error);
+}
+
+// `dataLoading` を隠す関数
+function hideDataLoading() {
+  const dataLoading = document.getElementById("dataLoading");
+  if (dataLoading) {
+    dataLoading.style.display = "none";
+  }
+}
+
+// URLにパラメータを追加する関数
+function appendParamsToUrl(url, params) {
+  Object.keys(params).forEach(key => {
+    if (params[key]) {
+      url.searchParams.append(key, params[key]);
+    }
+  });
+  return url;
 }

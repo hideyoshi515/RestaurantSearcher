@@ -19,9 +19,9 @@
     <title>Index</title>
   </head>
   <body onload="getResult()">
-    <div id="dataLoading" style="display: block; width:100%; height: 100vh; position: absolute; z-index: 10; background: #fff;">
-      <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-        <img src="img/loading.gif" style="width: 25%;">
+    <div id="dataLoading" class="loading-screen">
+      <div class="loading-content">
+        <img src="img/loading.gif" class="loading-img" />
       </div>
     </div>    
     <div id="detailModal" class="modal">
@@ -31,7 +31,7 @@
     </div>
 
     <div class="container">
-      <div id="shopTable">
+      <div class="shopTable" id="shopTable">
         <a class="shopHeader" href="index.html">
           <div class="shopHeaderCell" id="areaName">地域名</div>
         </a>
