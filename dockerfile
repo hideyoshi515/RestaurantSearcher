@@ -19,9 +19,12 @@ COPY . .
 # SSLキーと証明書をコピー (localhost.keyとlocalhost.pem)
 COPY ./.vscode/localhost.key /usr/src/app/localhost.key
 COPY ./.vscode/localhost.pem /usr/src/app/localhost.pem
+COPY ./ssl-config.js /usr/src/app/ssl-config.js
 
-# 3001ポートを公開
+# 3000:3001ポートを公開
+EXPOSE 3000
 EXPOSE 3001
 
+
 # アプリケーションを起動 (SSLを使用してlive-serverを3001ポートで実行)
-CMD ["live-server", "--https=--cert=localhost.pem --key=localhost.key", "--port=3001"]
+CMD ["sh", "-c", "live-server --port=3000 & live-server --https=ssl-config.js --port=3001"]
