@@ -111,7 +111,7 @@ function loadRecentHistory() {
     const historyTable = document.getElementById("historyMsg");
     const historyMessage = document.createElement("span");
     historyMessage.classList.add("historyList");
-    historyMessage.innerHTML = "最近見た一覧";
+    historyMessage.innerHTML = "直近閲覧のお店一覧";
     historyTable.appendChild(historyMessage);
   }
 
