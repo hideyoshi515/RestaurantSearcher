@@ -4,9 +4,9 @@ services:
   web:
     build: .
     ports:
-      - "3000:3000"  # ポートマッピング
+      - "3001:3001"  # ポート3001をホストとコンテナ間でマッピング
     volumes:
-      - .:/usr/src/app  # ソースコードの反映
+      - .:/usr/src/app  # ソースコードのリアルタイム反映
     environment:
-      - NODE_ENV=development  # 環境設定
-    restart: always  # 自動再起動
+      - NODE_ENV=development  # 環境設定を開発モードに設定
+    restart: always  # コンテナの自動再起動設定
