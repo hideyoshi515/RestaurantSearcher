@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "- Hot Pepper",
   "scripts": {
-    "start": "node index.js"
+    "start": "live-server --https=--cert=localhost.pem --key=localhost.key --port=3001"
   },
-  "dependencies": {
-    "express": "^4.19.2"
+  "dependencies": {},
+  "devDependencies": {
+    "live-server": "^1.2.2"
   }
 }
