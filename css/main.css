@@ -554,7 +554,7 @@ h1 {
   .pagination span {
     margin: 0 1px;
     padding: 2.5px 5px;
-    width: 28px !important;
+    width: calc((85vw) / 12) !important;
     height: 36px;
   }
 }
