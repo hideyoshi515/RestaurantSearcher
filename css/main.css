@@ -569,13 +569,13 @@ h1 {
 
   .middleBtn {
     width: 40vw;
-    height: 3vh;
+    height: 4vh;
     line-height: 3vh;
     overflow: hidden;
     text-wrap: nowrap;
     text-overflow: ellipsis;
     margin: 1vw 1vw;
-    font-size: 1.5vh !important;
+    font-size: 2vh !important;
     padding: 2.5px 0px 2.5px 5px;
   }
 
