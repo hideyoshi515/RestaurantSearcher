@@ -1,7 +1,3 @@
-let recentHistory = []; // 最近の履歴データを保存する配列
-let historyIndex = 0; // 最近の履歴配列のインデックス
-const historyLoadCount = 4; // 一度にロードする履歴の件数
-const maxHistoryLoadCount = 20; // 最大表示する履歴の件数
 const rangeSlider = document.getElementById("rangeSlider");
 const radioButtons = document.querySelectorAll('input[name="range"]');
 const locationInput = document.getElementById('locationInput');
@@ -19,6 +15,8 @@ function showPosition(position) {
     longitude = "139.69173371705";
   }
 
+  // スクロールを無効化 (スクロールを一時的に止める)
+  document.body.style.overflow = 'hidden';
   const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=ja`;
 
   fetch(url)
@@ -33,6 +31,7 @@ function showPosition(position) {
     })
     .catch(error => console.error('位置データを取得中にエラーが発生しました:', error)) // エラーハンドリング追加
     .finally(() => {
+      document.body.style.overflow = 'auto';
       dataLoading.style.display = "none";
       getLocationBtn.disabled = false;
     });
@@ -71,22 +70,19 @@ function showError(error) {
   getLocationBtn.disabled = true;
 }
 
+// ラジオボタンとスライダーの同期処理
 if (rangeSlider != null) {
-  // ラジオボタン選択時スライダー同期関数
   function syncRangeSlider() {
     const checkedRadio = document.querySelector('input[name="range"]:checked');
     if (checkedRadio) {
-      // スライダーとラジオボタンの同期処理
       rangeSlider.value = checkedRadio.value;
     }
   }
 
-  // ラジオボタン値変更時スライダー同期
   radioButtons.forEach((radio) => {
     radio.addEventListener("change", syncRangeSlider);
   });
 
-  // スライダー値変更時ラジオボタン同期関数
   function syncRadioButtons() {
     const value = rangeSlider.value;
     radioButtons.forEach((radio) => {
@@ -94,76 +90,7 @@ if (rangeSlider != null) {
     });
   }
 
-  // スライダー値変更時ラジオボタン同期
   rangeSlider.addEventListener("input", syncRadioButtons);
-
-  // 初期ロード時同期
   syncRangeSlider();
   syncRadioButtons();
 }
-// 最近の履歴データをロードして表示する関数
-function loadRecentHistory() {
-  const shopHistory = loadListFromLocalStorage("shopHistory");
-
-  recentHistory = shopHistory.getList(); // 保存された最近の履歴を取得
-  historyIndex = 0; // インデックスを初期化
-  if (recentHistory.length > 0) {
-    const historyTable = document.getElementById("historyMsg");
-    const historyMessage = document.createElement("span");
-    historyMessage.classList.add("historyList");
-    historyMessage.innerHTML = "直近閲覧のお店一覧";
-    historyTable.appendChild(historyMessage);
-  }
-
-  // 初めに表示する履歴をロード
-  displayRecentHistory();
-}
-
-// 最近の履歴を画面に表示する関数
-function displayRecentHistory() {
-  const historiesDiv = document.getElementById("historyDiv");
-
-  // 最大20件を表示する
-  let itemsToDisplay = Math.min(historyLoadCount, recentHistory.length - historyIndex);
-
-  for (let i = historyIndex; i < historyIndex + itemsToDisplay && i < recentHistory.length; i++) {
-    const shopElement = createShopElement(recentHistory[i], true);
-    historiesDiv.appendChild(shopElement);
-  }
-
-  historyIndex += itemsToDisplay; // インデックスを更新
-
-  // 最大件数に達した場合にメッセージを表示
-  if (historyIndex >= Math.min(maxHistoryLoadCount, recentHistory.length)) {
-    const message = document.createElement("span");
-    message.textContent = `最大 ${maxHistoryLoadCount}件まで表示されています`;
-    message.classList.add("info-message");
-    if (recentHistory.length > 0) {
-      document.getElementById('historyEnd').appendChild(message);
-    }
-  }
-}
-
-// スクロールで追加履歴をロードする関数
-function setupScrollLoadRecentHistory() {
-  const onScroll = () => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-      if (historyIndex < recentHistory.length && historyIndex < maxHistoryLoadCount) {
-        displayRecentHistory();
-      }
-    }
-  };
-
-  window.addEventListener("scroll", onScroll);
-
-  // スクロールイベントハンドラーの解除（必要に応じて）
-  return () => window.removeEventListener("scroll", onScroll);
-}
-
-// ページロード時に最近の履歴をロードして無限スクロールを設定
-document.addEventListener("DOMContentLoaded", () => {
-  if (window.location.pathname.endsWith("index.html")) {
-    loadRecentHistory(); // 最近の履歴をロード
-    setupScrollLoadRecentHistory(); // 無限スクロールを設定
-  }
-});

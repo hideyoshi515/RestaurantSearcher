@@ -1,11 +1,4 @@
-let currentPage = 1; // 現在のページ番号
-const itemsPerPage = 10; // 1ページに表示する最大の件数
-let totalItems = 0; // 全店舗の総数
 let shops = []; // 店舗データを格納する配列
-let currentIndex = 0; // 現在ロードされた店舗のインデックス
-const initialLoadCount = 6; // 初回に表示する店舗の件数（6件）
-const maxLoadCount = 10; // スクロールで追加できる最大件数（10件まで）
-const shopIncrement = 1; // スクロール時に追加ロードする店舗の件数（1件）
 
 // URLパラメータからAPI用のURLを生成
 function generateApiUrl() {
@@ -92,15 +85,6 @@ function parseXML(xmlString) {
   handleXMLData(xmlDoc);
 }
 
-// エリア名のXMLを解析する関数
-function parseXMLName(xmlString) {
-  const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(xmlString, "application/xml");
-  const name = xmlDoc.getElementsByTagName("name")[0].textContent;
-  const small_area_code = xmlDoc.getElementsByTagName("code")[0].textContent;
-  document.getElementById("areaName").innerHTML = name;
-}
-
 // XMLデータの処理
 function handleXMLData(xmlDoc) {
   const shopElements = xmlDoc.getElementsByTagName("shop");
@@ -109,175 +93,9 @@ function handleXMLData(xmlDoc) {
   displayPage(currentPage); // ページごとに最初に表示
 }
 
-// 店舗データを抽出する関数
-function extractShopData(shop) {
-  const shopid = shop.getElementsByTagName("id")[0].textContent;
-  const name = shop.getElementsByTagName("name")[0].textContent;
-  const access = shop.getElementsByTagName("mobile_access")[0].textContent;
-  const logoImage = shop.getElementsByTagName("l")[0].textContent;
-  const address = shop.getElementsByTagName("address")[0].textContent;
-  const open = shop.getElementsByTagName("open")[0].textContent;
-
-  return { shopid, name, access, logoImage, address, open };
-}
-
-// 店舗データを生成して表示する関数
-function createShopElement(shop, recent) {
-  let shopid, name, access, logoImage, address, open;
-
-  if (recent) {
-    // recentがtrueの場合、文字列を分割してデータを抽出
-    [shopid, name, access, logoImage, address, open] = shop.split("§");
-  } else {
-    // recentがfalseの場合、XMLデータから抽出
-    const shopData = extractShopData(shop);
-    ({ shopid, name, access, logoImage, address, open } = shopData);
-  }
-
-  const shopLink = document.createElement("a");
-  shopLink.classList.add("shop-link");
-  shopLink.classList.add("no-linkStyle");
-  shopLink.href = "javascript:void(0)";
-  shopLink.setAttribute('onclick', `openModal('${shopid}')`);
-
-  const shopDiv = document.createElement("div");
-  shopDiv.classList.add("shop");
-
-  const shopImage = document.createElement("img");
-  shopImage.src = logoImage;
-  shopImage.classList.add("shop-image");
-  shopImage.alt = "Shop Image";
-  shopDiv.appendChild(shopImage);
-
-  const shopContentDiv = document.createElement("div");
-  shopContentDiv.classList.add("shop-content");
-
-  const shopName = document.createElement("p");
-  shopName.classList.add("shop-name");
-  shopName.textContent = name;
-  shopContentDiv.appendChild(shopName);
-
-  const shopAccess = document.createElement("p");
-  shopAccess.classList.add("shop-access");
-  shopAccess.innerHTML = access;
-  shopContentDiv.appendChild(shopAccess);
-
-  const shopTime = document.createElement("p");
-  shopTime.classList.add("shop-time");
-  shopTime.innerHTML = open;
-  shopContentDiv.appendChild(shopTime);
-
-  shopDiv.appendChild(shopContentDiv);
-  shopLink.appendChild(shopDiv);
-
-  return shopLink;
-}
-
-// ページごとにデータを表示する関数
-function displayPage(page) {
-  const startIndex = (page - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
-
-  currentIndex = startIndex; // ページが変更された際にインデックスを初期化
-  const shopListContainer = document.querySelector(".shopList");
-  shopListContainer.innerHTML = ""; // 以前の項目をクリア
-
-  for (let i = currentIndex; i < currentIndex + initialLoadCount && i < endIndex; i++) {
-    const shopElement = createShopElement(shops[i], false);
-    shopListContainer.appendChild(shopElement);
-  }
-
-  currentIndex += initialLoadCount; // 6件ロード後にインデックスを更新
-
-  // スクロールイベントの設定
-  setupScrollLoad(endIndex);
-}
-
-// スクロールで追加店舗をロードする関数
-function setupScrollLoad(endIndex) {
-  const onScroll = () => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-      loadMoreShops(endIndex);
-    }
-  };
-
-  window.addEventListener("scroll", onScroll);
-
-  // 스크롤 이벤트 핸들러 해제 (필요시)
-  return () => window.removeEventListener("scroll", onScroll);
-}
-
-// 追加で店舗をロードする関数
-function loadMoreShops(endIndex) {
-  const shopListContainer = document.querySelector(".shopList");
-  if (currentIndex < endIndex && currentIndex - (currentPage - 1) * itemsPerPage < maxLoadCount) {
-    const shopElement = createShopElement(shops[currentIndex], false);
-    shopListContainer.appendChild(shopElement);
-    currentIndex += shopIncrement; // 1件ずつ追加ロード
-  } else {
-    updatePagination();
-  }
-}
-
-// ページネーションの更新
-function updatePagination() {
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  let paginationHTML = "";
-
-  if (currentPage > 1) {
-    paginationHTML += `<button class="pageBtn" onclick="changePage(${currentPage - 1})"><</button>`;
-  } else {
-    paginationHTML += `<button class="pageBtn" disabled><</button>`;
-  }
-
-  for (let i = 1; i <= totalPages; i++) {
-    if (i === currentPage) {
-      paginationHTML += `<span class="current pageBtn">${i}</span>`;
-    } else {
-      paginationHTML += `<button class="pageBtn" onclick="changePage(${i})">${i}</button>`;
-    }
-  }
-
-  if (currentPage < totalPages) {
-    paginationHTML += `<button class="pageBtn" onclick="changePage(${currentPage + 1})">></button>`;
-  } else {
-    paginationHTML += `<button class="pageBtn" disabled>></button>`;
-  }
-
-  const paginationDiv = document.createElement("div");
-  paginationDiv.id = "pagination";
-  paginationDiv.innerHTML = paginationHTML;
-  paginationDiv.classList.add("pagination");
-
-  const existingPaginationDiv = document.getElementById("pagination");
-  if (existingPaginationDiv) {
-    document.body.replaceChild(paginationDiv, existingPaginationDiv);
-  } else {
-    document.body.appendChild(paginationDiv);
-  }
-}
-
-// ページを変更する関数
-function changePage(page) {
-  if (page >= 1 && page <= Math.ceil(totalItems / itemsPerPage)) {
-    currentPage = page;
-    currentIndex = 0; // currentIndex を初期化
-    window.scrollTo(0, 0); // ページの最上部にスクロール
-    displayPage(currentPage); // ページ表示
-  }
-}
-
 // エラー処理関数
 function handleError(error) {
   console.error("Error:", error);
-}
-
-// `dataLoading` を隠す関数
-function hideDataLoading() {
-  const dataLoading = document.getElementById("dataLoading");
-  if (dataLoading) {
-    dataLoading.style.display = "none";
-  }
 }
 
 // URLにパラメータを追加する関数
@@ -288,4 +106,53 @@ function appendParamsToUrl(url, params) {
     }
   });
   return url;
+}
+
+// ローディング画面を非表示にする関数
+function hideDataLoading() {
+  const dataLoading = document.getElementById("dataLoading");
+  if (dataLoading) {
+    dataLoading.style.display = "none";
+  }
+}
+
+// XMLデータから店舗名を解析して表示する関数
+function parseXMLName(xmlString) {
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(xmlString, "application/xml");
+  const name = xmlDoc.getElementsByTagName("name")[0].textContent;
+  document.getElementById("areaName").innerHTML = name;
+}
+
+// ページごとに店舗データを表示する関数
+function displayPage(page) {
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+
+  currentIndex = startIndex; // ページが変更された際にインデックスを初期化
+  const shopListContainer = document.querySelector(".shopList");
+  shopListContainer.innerHTML = ""; // 以前の店舗データをクリア
+
+  // 表示する範囲内の店舗データを生成してリストに追加
+  for (let i = currentIndex; i < currentIndex + initialLoadCount && i < endIndex; i++) {
+    const shopElement = createShopElement(shops[i], false);
+    shopListContainer.appendChild(shopElement);
+  }
+
+  currentIndex += initialLoadCount; // ロード後にインデックスを更新
+
+  // スクロール終端の感知を設定
+  setupScrollLoad();
+}
+
+// XMLデータから店舗情報を抽出する関数
+function extractShopData(shop) {
+  const shopid = shop.getElementsByTagName("id")[0].textContent;
+  const name = shop.getElementsByTagName("name")[0].textContent;
+  const access = shop.getElementsByTagName("mobile_access")[0].textContent;
+  const logoImage = shop.getElementsByTagName("l")[0].textContent;
+  const address = shop.getElementsByTagName("address")[0].textContent;
+  const open = shop.getElementsByTagName("open")[0].textContent;
+
+  return { shopid, name, access, logoImage, address, open };
 }
