@@ -2,18 +2,18 @@
 const MAX_SIZE = 20;
 const storageKey = 'shopHistory'; // ストレージキーを指定
 
-// サイズ制限があるListクラスを定義
+// サイズ制限があるリストクラス
 class OrderedLimitedList {
     constructor(maxSize) {
-        this.maxSize = maxSize;  // 最大サイズを設定
-        this.list = [];  // 順序を保持するための配列
+        this.maxSize = maxSize;  // リストの最大サイズを設定
+        this.list = [];  // アイテムを保持するための配列
     }
 
-    // アイテムを追加するメソッド
+    // アイテムをリストに追加するメソッド
     add(item) {
         const index = this.list.indexOf(item);
         if (index === -1) {
-            // アイテムがリストに存在しない場合、リストに追加
+            // アイテムがリストに存在しない場合は追加
             this.list.push(item);
 
             // サイズ制限を超えた場合は最も古いアイテムを削除
@@ -21,7 +21,7 @@ class OrderedLimitedList {
                 this.list.shift();  // 最も古いアイテムを削除
             }
         } else {
-            // アイテムが既に存在する場合、リスト内での位置を更新
+            // 既存のアイテムがある場合、その位置を更新
             this.list.splice(index, 1);
             this.list.push(item);
         }
@@ -31,7 +31,7 @@ class OrderedLimitedList {
     remove(item) {
         const index = this.list.indexOf(item);
         if (index !== -1) {
-            this.list.splice(index, 1);
+            this.list.splice(index, 1); // アイテムをリストから削除
         }
     }
 
@@ -46,45 +46,39 @@ let myList = new OrderedLimitedList(MAX_SIZE);
 
 // リストにアイテムを追加する関数
 function addItemToList(item) {
-    myList.add(item);
+    myList.add(item); // リストにアイテムを追加
 }
 
 // リストをlocalStorageに保存する関数
 function saveListToLocalStorage() {
-    // 既存のデータを取得
-    const existingData = localStorage.getItem(storageKey);
+    const existingData = localStorage.getItem(storageKey); // 既存データを取得
 
-    // 既存のデータを配列に変換
     let existingList = [];
     if (existingData) {
-        existingList = JSON.parse(existingData);
+        existingList = JSON.parse(existingData); // 既存データを配列に変換
     }
 
-    // 現在のリストのデータを取得
-    const newData = myList.getList();
+    const newData = myList.getList(); // 現在のリストを取得
 
-    // 現在のリストのデータを追加
     newData.forEach(item => {
         if (!existingList.includes(item)) {
             if (existingList.length >= MAX_SIZE) {
-                existingList.shift(); // サイズ制限を超えた場合は最も古いアイテムを削除
+                existingList.shift(); // サイズ制限を超えた場合は古いデータを削除
             }
             existingList.push(item); // 新しいアイテムを追加
         }
     });
 
-    // 更新されたリストをJSON文字列に変換してlocalStorageに保存
-    localStorage.setItem(storageKey, JSON.stringify(existingList));
+    localStorage.setItem(storageKey, JSON.stringify(existingList)); // localStorageに保存
 }
 
 // localStorageからリストをロードする関数
 function loadListFromLocalStorage() {
-    const data = localStorage.getItem(storageKey);
+    const data = localStorage.getItem(storageKey); // localStorageからデータを取得
     if (data) {
-        const parsedData = JSON.parse(data);  // JSON文字列を配列に変換
-        // 既存のOrderedLimitedListを更新
-        myList = new OrderedLimitedList(MAX_SIZE);
-        parsedData.forEach(item => myList.add(item));  // 既存データをリストに追加
+        const parsedData = JSON.parse(data);  // JSONデータをパース
+        myList = new OrderedLimitedList(MAX_SIZE); // 新しいリストを作成
+        parsedData.forEach(item => myList.add(item));  // データをリストに追加
     } else {
         myList = new OrderedLimitedList(MAX_SIZE); // データがなければ空のリストを作成
     }

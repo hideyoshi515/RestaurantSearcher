@@ -11,7 +11,16 @@ function openModal(shopid) {
 
   // モーダルを表示し、スクロール無効化
   modal.style.display = "block";
-  document.body.style.overflow = "hidden"; // スクロール無効
+  // 基本的にスクロールを無効化
+  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+  document.body.style.overflow = 'hidden';
+  // User-Agentを使用してPCとモバイルを判別
+  if (!/Mobi|Android/i.test(navigator.userAgent)) {
+    // PCの場合（モバイルデバイスでない場合）
+    // スクロールバーが消えたスペース分、右側にパディングを追加
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
+  }
+
   const url = `${apiUrl}&id=${shopid}`;
   fetch(proxyUrl + encodeURIComponent(url))
     .then((response) => response.text())
@@ -64,6 +73,9 @@ function handleModalData(shop) {
 window.onclick = function (event) {
   if (event.target == modal) {
     modal.style.display = "none"; // モーダル非表示
+    if (!/Mobi|Android/i.test(navigator.userAgent)) {
+      document.body.style.paddingRight = '';
+    }
     document.body.style.overflow = "auto"; // スクロール再有効
   }
 };
