@@ -45,14 +45,16 @@ function handleModalData(shop) {
   modalBody.innerHTML = `
   <div>
     <div>
-      <img class="shop-image" src="${logoImage}" alt="${name}">
+      <a href="https://www.hotpepper.jp/str${shopid}">
+        <img class="shop-image" src="${logoImage}" alt="${name}">
+      </a>
       <p class="shop-name" style="white-space: wrap">${name}</p>
       <p class="shop-access" style="white-space: wrap"> ${address}</p>
       <p class="shop-access" style="white-space: wrap"> ${access}</p>
       <p class="shop-time" style="white-space: wrap"> ${open}</p>
       </div>
       <div>
-      <p class="shop-tag"> #${private_room} #${cardCan} #${parking} #${non_smoking} #${genre}</p>
+      <p class="shop-tag"> #${private_room} #${cardCan} #${parking} #${non_smoking} #${genre} #写真押すとホットペッパーへ</p>
     </div>
   </div>
 `;
