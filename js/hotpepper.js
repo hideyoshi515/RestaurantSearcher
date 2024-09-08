@@ -14,7 +14,8 @@ function generateApiUrl() {
     lon: urlParams.get("lon"),
     large_area: urlParams.get("large_area"),
     middle_area: urlParams.get("middle_area"),
-    small_area: urlParams.get("small_area")
+    small_area: urlParams.get("small_area"),
+    name_any: urlParams.get("name_any")
   });
 
   return url;
@@ -36,7 +37,23 @@ function getResult() {
   } else if (urlParams.has("lat") && (urlParams.has("lng") || urlParams.has("lon"))) {
     const longitude = urlParams.get("lng") || urlParams.get("lon");
     fetchLocationInfo(urlParams.get("lat"), longitude, urlParams.get("range"));
+  } if (urlParams.has("name_any")) {
+    fetchShopName(urlParams.get("name_any"));
   }
+}
+
+// お店名を取得する関数
+function fetchShopName(shopName) {
+  let areaUrl = new URL(apiUrl); // お店名取得用のURLを作成
+  areaUrl.searchParams.append("name_any", shopName);
+  fetch(proxyUrl + encodeURIComponent(areaUrl))
+    .then((response) => response.text())
+    .then((data) => { 
+      parseXML(data); 
+      document.getElementById("areaName").innerHTML = `「${shopName}」検索結果`;
+    }) // XMLレスポンスを解析
+    .catch(handleError) // エラーハンドリング
+    .finally(hideDataLoading); // ローディング表示を終了
 }
 
 // エリア名を取得する関数

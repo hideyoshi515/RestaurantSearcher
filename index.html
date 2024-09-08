@@ -36,14 +36,36 @@
       <div class="tab-container">
         <div class="tabs">
           <button class="tab" onclick="switchTab(event, 'Tab1')">
-            位置基盤検索
+            店舗名検索
           </button>
           <button class="tab" onclick="switchTab(event, 'Tab2')">
+            位置基盤検索
+          </button>
+          <button class="tab" onclick="switchTab(event, 'Tab3')">
             地域選択検索
           </button>
           <div class="tab-slider"></div>
         </div>
         <div id="Tab1" class="tab-content">
+          <div name="searchForm">
+            <a href="https://www.hotpepper.jp/">
+              <div class="logo-img-container">
+                <img src="img/hotpepper.png" class="logo-img" />
+              </div>
+            </a>
+            <p class="hotPepperDesc">
+              当サイトはホットペッパーグルメAPIを使用しています
+            </p>
+            <form class="location-container" action="result.html" method="get">
+              <input class="locationInput" type="text" name="name_any" id="shopNameInput" placeholder="検索する店舗名を入力してください"
+                required oninvalid="this.setCustomValidity(' ')" />
+              <button class="getLocationBtn" id="searchShop" type="submit">
+                検索
+              </button>
+            </form>
+          </div>
+        </div>
+        <div id="Tab2" class="tab-content">
           <div name="searchForm">
             <a href="#" onclick="getLocation()">
               <div class="map-img-container">
@@ -74,13 +96,12 @@
             <div class="location-container">
               <input class="locationInput" type="text" id="locationInput" value="現在位置取得中" readonly />
               <button class="getLocationBtn" id="getLocationBtn" onclick="searchLocation()">
-                <!--権限がない場合のみ表示-->
                 検索
               </button>
             </div>
           </div>
         </div>
-        <div id="Tab2" class="tab-content">
+        <div id="Tab3" class="tab-content">
           <form name="searchLocate" action="result.html" method="GET">
             <div>
               <div class="jp_map" id="jp_map">
