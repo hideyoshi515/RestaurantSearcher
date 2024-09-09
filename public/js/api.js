@@ -1,4 +1,4 @@
-const proxyUrl = "https://corsproxy.io/?";
+const proxyUrl = "";//"https://corsproxy.io/?";
 const apiKey = "2957e45352f97570";
 const apiUrl = `https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${apiKey}`;
 const largeAreaUrl = `http://webservice.recruit.co.jp/hotpepper/large_area/v1/?key=${apiKey}`;
