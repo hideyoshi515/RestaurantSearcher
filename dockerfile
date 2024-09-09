@@ -17,9 +17,9 @@ RUN npm install -g live-server
 COPY . .
 
 # SSLキーと証明書をコピー (localhost.keyとlocalhost.pem)
-COPY ./.vscode/localhost.key /usr/src/app/localhost.key
-COPY ./.vscode/localhost.pem /usr/src/app/localhost.pem
-COPY ./ssl-config.js /usr/src/app/ssl-config.js
+COPY ./ssl/localhost.key /usr/src/app/localhost.key
+COPY ./ssl/localhost.pem /usr/src/app/localhost.pem
+COPY ./ssl/ssl-config.js /usr/src/app/ssl-config.js
 
 # 3000:3001ポートを公開
 EXPOSE 3000
