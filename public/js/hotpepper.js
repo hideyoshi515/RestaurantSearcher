@@ -24,7 +24,7 @@ function generateApiUrl() {
 // APIに接続して結果を取得する関数
 function getResult() {
   const url = generateApiUrl(); // APIのURLを生成
-  fetch(proxyUrl + encodeURIComponent(url)) // APIリクエストを送信
+  fetch(encodeURIComponent(url)) // APIリクエストを送信
     .then((response) => response.text())
     .then((data) => parseXML(data)) // XMLレスポンスを解析
     .catch(handleError); // エラー処理
@@ -46,7 +46,7 @@ function getResult() {
 function fetchShopName(shopName) {
   let areaUrl = new URL(apiUrl); // お店名取得用のURLを作成
   areaUrl.searchParams.append("name_any", shopName);
-  fetch(proxyUrl + encodeURIComponent(areaUrl))
+  fetch(encodeURIComponent(areaUrl))
     .then((response) => response.text())
     .then((data) => { 
       parseXML(data); 
@@ -60,7 +60,7 @@ function fetchShopName(shopName) {
 function fetchAreaName(smallArea) {
   let areaUrl = new URL(smallAreaNameUrl); // エリア名取得用のURLを作成
   areaUrl.searchParams.append("small_area", smallArea);
-  fetch(proxyUrl + encodeURIComponent(areaUrl))
+  fetch(encodeURIComponent(areaUrl))
     .then((response) => response.text())
     .then((data) => parseXMLName(data)) // XMLレスポンスを解析
     .catch(handleError) // エラーハンドリング

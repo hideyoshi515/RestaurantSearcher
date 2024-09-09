@@ -59,7 +59,7 @@ const cache = {
 // データロード
 function loadData(url, parser, key) {
   // データを取得してXML形式にパースする
-  return fetch(proxyUrl + encodeURIComponent(url))
+  return fetch(encodeURIComponent(url))
     .then((response) => response.text())  // レスポンスをテキストとして取得
     .then((str) => new window.DOMParser().parseFromString(str, "text/xml")) // XML形式に変換
     .then((data) => {
