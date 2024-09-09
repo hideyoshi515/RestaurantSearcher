@@ -78,16 +78,30 @@ function closeModal() {
   document.body.style.overflow = "auto"; // スクロール再有効
 }
 
-// モーダル外クリックでモーダル閉じる
-window.onclick = function (event) {
+// モーダル外クリックでモーダルを閉じる (クリックとタッチイベントの両方に対応)
+window.addEventListener("click", function (event) {
   if (event.target == modal) {
+    event.preventDefault();  // デフォルト動作を防止
+    event.stopPropagation(); // イベント伝播を防止
     closeModal();
   }
-};
+});
 
-// For iOS
-window.ontouchstart = function (event) {
+// iOS用: タッチイベントでもモーダルを閉じる (タッチ終了時に処理)
+window.addEventListener("touchend", function (event) {
   if (event.target == modal) {
+    event.preventDefault();  // デフォルト動作を防止
+    event.stopPropagation(); // イベント伝播を防止
     closeModal();
   }
-};
+}, { passive: false });
+
+// モーダル内のクリックイベントが外部に伝播されないようにする
+document.querySelector('.modal-content').addEventListener("click", function (event) {
+  event.stopPropagation();
+});
+
+// モーダル内のタッチイベントが外部に伝播されないようにする (iOS用)
+document.querySelector('.modal-content').addEventListener("touchend", function (event) {
+  event.stopPropagation();
+}, { passive: false });
