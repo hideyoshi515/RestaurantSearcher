@@ -1,6 +1,7 @@
 ## 作動環境
 - Live Server
 - Docker
+上記の中１つ
 
 ## Docker環境
 - Docker Desktop 4.33.1
