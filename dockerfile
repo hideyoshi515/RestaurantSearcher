@@ -10,21 +10,20 @@ COPY package*.json ./
 # 依存関係をインストール
 RUN npm ci
 
-# live-serverをグローバルにインストール
-RUN npm install -g live-server
+# expressとcorsをインストール
+RUN npm install express cors
 
 # ソースコードをコピー
 COPY . .
 
-# SSLキーと証明書をコピー (localhost.keyとlocalhost.pem)
+# SSLキーと証明書をコピー
 COPY ./ssl/localhost.key /usr/src/app/localhost.key
 COPY ./ssl/localhost.pem /usr/src/app/localhost.pem
 COPY ./ssl/ssl-config.js /usr/src/app/ssl-config.js
 
-# 3000:3001ポートを公開
+# 3000および3001ポートを公開
 EXPOSE 3000
 EXPOSE 3001
 
-
-# アプリケーションを起動 (SSLを使用してlive-serverを3001ポートで実行)
-CMD ["sh", "-c", "live-server --port=3000 & live-server --https=ssl-config.js --port=3001"]
+# アプリケーションを起動
+CMD ["node", "server.js"]
