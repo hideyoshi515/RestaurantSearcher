@@ -22,7 +22,7 @@ function openModal(shopid) {
   }
 
   const url = `${apiUrl}&id=${shopid}`;
-  fetch(encodeURIComponent(url))
+  fetch(proxyUrl + encodeURIComponent(url))
     .then((response) => response.text())
     .then((data) => parseModalXML(data))
     .catch((error) => console.error("Error:", error))
