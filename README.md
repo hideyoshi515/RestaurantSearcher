@@ -31,20 +31,20 @@ flowchart TD;
 
 # 利用方法
 ## 店舗名検索
-![ex_screenshot](./img/readme/sc01.png){: width="200"}
+![ex_screenshot](./img/readme/sc01.png)
 inputに検索する店舗名を入力して検索ボタンを押す
 - 検索結果が出るまで時間がかかる場合があります。
 
 ## 現在位置周辺検索
-![ex_screenshot](./img/readme/sc02.png){: width="200"}
+![ex_screenshot](./img/readme/sc02.png)
 サイト起動しGPS権限許可を要請、許可されたら自動的に現在位置が表示、検索範囲を選んで検索ボタンを押す
 
 ## 都道府県選択検索
-![ex_screenshot](./img/readme/sc03.png){: width="200"}
+![ex_screenshot](./img/readme/sc03.png)
 都道府県を選択すると下部に名所が登場。続けて名所を選択すると、下位カテゴリ出て、それを選択するから検索
 
 ## 検索結果
-![ex_screenshot](./img/readme/sc04.png){: width="200"}
+![ex_screenshot](./img/readme/sc04.png)
 検索結果リストから店舗を選択すると、モーダルが開けて、SNS風に情報が見られる
 開けたお店はメインの直近閲覧一覧に追加
 
