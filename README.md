@@ -1,11 +1,12 @@
 ## 作動環境
-Live ServerやDocker
+- Live Server
+- Docker
 
 ## Docker環境
-Docker Desktop 4.33.1
-node.js 20.17.0 Alpine
-npm 4.1.5
-live-server 1.2.2
+- Docker Desktop 4.33.1
+- node.js 20.17.0 Alpine
+- npm 4.1.5
+- live-server 1.2.2
 
 ## 機能フォローチャート
 ```mermaid
@@ -29,7 +30,7 @@ flowchart TD;
 
 
 ## 引用元
-*1 日本地図リソース：https://web.contempo.jp/weblog/tips/post-7652
+1. 日本地図リソース：https://web.contempo.jp/weblog/tips/post-7652
 
 ## 注意事項
-自分のSSL認証書を使用する場合、sslフォルダにSSL認証書を入れて./dockerfileと./ssl/ssl-config.jsを修正する必要があります。
+- 自分のSSL認証書を使用する場合、sslフォルダにSSL認証書を入れて./dockerfileと./ssl/ssl-config.jsを修正する必要があります。
