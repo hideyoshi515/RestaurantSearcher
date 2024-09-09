@@ -1,3 +1,6 @@
+## 作動環境
+Live ServerやDocker
+
 ## Docker環境
 Docker Desktop 4.33.1
 node.js 20.17.0 Alpine
