@@ -504,10 +504,6 @@ h1 {
   width: 25%;
 }
 
-#detailModal{
-  z-index: 9999;
-}
-
 .modal {
   display: none;
   position: fixed;
