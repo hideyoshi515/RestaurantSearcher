@@ -535,7 +535,6 @@ h1 {
   width: 640px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   animation: fadeInUp 0.3s ease-out;
-  pointer-events: none;
 }
 
 .modal-content img {
