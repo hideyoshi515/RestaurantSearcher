@@ -209,9 +209,6 @@ function setupScrollLoadRecentHistory() {
           const message = document.createElement("span");
           message.textContent = `最大 ${maxHistoryLoadCount}件まで表示されています`;
           message.classList.add("info-message");
-          if (!document.querySelector('.info-message')) {
-            document.getElementById('historyEnd').appendChild(message);
-          }
           observer.disconnect(); // データがすべてロードされたら監視停止
         }
       }
