@@ -66,16 +66,28 @@ function handleModalData(shop) {
       <p class="shop-tag"> #${private_room} #${cardCan} #${parking} #${non_smoking} #${genre} #写真押すとホットペッパーへ</p>
     </div>
   </div>
-`;
+  `;
+}
+
+// モーダルを閉じる関数
+function closeModal() {
+  modal.style.display = "none"; // モーダル非表示
+  if (!/Mobi|Android/i.test(navigator.userAgent)) {
+    document.body.style.paddingRight = '';
+  }
+  document.body.style.overflow = "auto"; // スクロール再有効
 }
 
 // モーダル外クリックでモーダル閉じる
 window.onclick = function (event) {
   if (event.target == modal) {
-    modal.style.display = "none"; // モーダル非表示
-    if (!/Mobi|Android/i.test(navigator.userAgent)) {
-      document.body.style.paddingRight = '';
-    }
-    document.body.style.overflow = "auto"; // スクロール再有効
+    closeModal();
+  }
+};
+
+// For iOS
+window.ontouchstart = function (event) {
+  if (event.target == modal) {
+    closeModal();
   }
 };
